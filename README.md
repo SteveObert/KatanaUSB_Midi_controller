@@ -29,3 +29,6 @@ I used a MIDI break out board but there no reason not to build your own MIDI in/
 What got me started on this project is a forum thread created by the author of the MS3 library: 
 https://www.vguitarforums.com/smf/index.php?topic=21864.0
 
+
+![alt text](https://raw.githubusercontent.com/SteveObert/KatanaUSB_Midi_controller/master/images/wiring.png)
+
