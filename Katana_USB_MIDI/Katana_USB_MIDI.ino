@@ -177,6 +177,10 @@ void clearFX (void) {
   message2 = "FX2 off    ";
   message3 = "FX3 off    ";
   message4 = "Loop on ";
+  effectsState1 = 0;
+  effectsState2 = 0;
+  effectsState3 = 0;
+  fxLoopstate = 1;
 }
 
 //###########################
