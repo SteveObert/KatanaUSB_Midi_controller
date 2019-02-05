@@ -7,6 +7,8 @@ This is working prototype of a MIDI foot controller for a BOSS Katana using a Te
 
 It seems reliable to me; however, it's not been tested by anyone but me. I'm not an experienced programmer so there's lots of room for optimization. Additionally, work needs to be done on the effect status messages. Right now, they are setup for the way I use the Katana - when I switch amp channels I have all effects set to off. So, you'll need to change the programming if you use it differently. I'm working on a way to read FX status updates from the Katana but don't have it working yet.
 
+* Note I had to compile the sketch 72MHz and "fast" (debug also works), otherwise the USB mini host shield wouldn't work. I also specified "Serial + MIDI" for testing and just "MIDI" when powered externally (not connected to a computer).
+
 Along with the Teensy 3.2, I use a Mini USB Host shield like this one: https://www.circuitsathome.com/usb-host-shield-hardware-manual/ along with the host shield library: https://github.com/felis/USB_Host_Shield_2.0.
 
 Roland/Boss guitar gear uses a non-class compliant USB device for midi control. Additionally, there is a checksum included in each sysex message. I found this library made for the BOSS MS3:  https://github.com/MrHaroldA/MS3.
@@ -18,13 +20,6 @@ part of the sysex header from 0x3b to 0x33 for Katana
       const byte MS3_HEADER[6] = {0x41, 0x00, 0x00, 0x00, 0x00, 0x33};
    
    
-* Note I had to compile the sketch 72MHz and "fast" (debug also works), otherwise the USB mini host shield wouldn't work. I also specified "Serial + MIDI" for testing and just "MIDI" when powered externally (not connected to a computer).
-
-* Also, I originally tested this project with an Arduino Nano and I "cut the trace inside VBUS jumper" on the host shield as mentioned in the second paragraph under the Power Options part of this page: https://www.circuitsathome.com/usb-host-shield-hardware-manual/ shown here: https://www.pjrc.com/teensy/td_libs_USBHostShield.html. I googled these pictures: [url=https://geekhack.org/index.php?PHPSESSID=jnim6u2dcno62u8vpbm8sl9ias67hb3o&action=dlattach;topic=80421.0;attach=130856;image]https://geekhack.org/index.php?PHPSESSID=jnim6u2dcno62u8vpbm8sl9ias67hb3o&action=dlattach;topic=80421.0;attach=130856;image[/url] and [url=https://geekhack.org/index.php?PHPSESSID=jnim6u2dcno62u8vpbm8sl9ias67hb3o&action=dlattach;topic=80421.0;attach=130858;image]https://geekhack.org/index.php?PHPSESSID=jnim6u2dcno62u8vpbm8sl9ias67hb3o&action=dlattach;topic=80421.0;attach=130858;image[/url]
-
-I haven't tested the current sketch with anything other than a Teensy 3.2.
-
-
 Here is some excellent information about sysex messages and Katana amps: https://github.com/snhirsch/katana-midi-bridge/blob/master/doc/katana_sysex.txt
 
 
@@ -38,4 +33,8 @@ https://www.vguitarforums.com/smf/index.php?topic=21864.0
 
 
 ![alt text](https://raw.githubusercontent.com/SteveObert/KatanaUSB_Midi_controller/master/images/wiring.png)
+
+* Also, I originally tested this project with an Arduino Nano and I "cut the trace inside VBUS jumper" on the host shield as mentioned in the second paragraph under the Power Options part of this page: https://www.circuitsathome.com/usb-host-shield-hardware-manual/ shown here: https://www.pjrc.com/teensy/td_libs_USBHostShield.html. I googled these pictures: [url=https://geekhack.org/index.php?PHPSESSID=jnim6u2dcno62u8vpbm8sl9ias67hb3o&action=dlattach;topic=80421.0;attach=130856;image]https://geekhack.org/index.php?PHPSESSID=jnim6u2dcno62u8vpbm8sl9ias67hb3o&action=dlattach;topic=80421.0;attach=130856;image[/url] and [url=https://geekhack.org/index.php?PHPSESSID=jnim6u2dcno62u8vpbm8sl9ias67hb3o&action=dlattach;topic=80421.0;attach=130858;image]https://geekhack.org/index.php?PHPSESSID=jnim6u2dcno62u8vpbm8sl9ias67hb3o&action=dlattach;topic=80421.0;attach=130858;image[/url]
+
+I haven't tested the current sketch with anything other than a Teensy 3.2.
 
