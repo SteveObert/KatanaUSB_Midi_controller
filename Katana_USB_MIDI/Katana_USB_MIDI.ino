@@ -47,10 +47,10 @@ int ledState = LOW;                       // blink time for  select bank 2 is ac
 
 
 // sysex define ################################
-const unsigned long PC = 0x00010000; // change channel MS3.write(P_PATCH, 1, 2) second byte is channel number 3rd is length
-const unsigned long CC16 = 0x60000030; //turn button 1 on  MS3.write(P_PATCH, 1, 1) second byte 0 = off 1 = on
-const unsigned long CC17 = 0x6000034C; //turn button 2 on  MS3.write(P_PATCH, 1, 1) second byte 0 = off 1 = on
-const unsigned long CC18 = 0x60000610; //turn reverb on  MS3.write(P_PATCH, 1, 1) second byte 0 = off 1 = on
+const unsigned long PC = 0x00010000; // change channel katana.write(PC, 1, 2) second byte is channel number 3rd is length
+const unsigned long CC16 = 0x60000030; //turn button 1 on  katana.write(CC16, 1, 1) second byte 0 = off 1 = on
+const unsigned long CC17 = 0x6000034C; //turn button 2 on  katana.write(CC17, 1, 1) second byte 0 = off 1 = on
+const unsigned long CC18 = 0x60000610; //turn reverb on  katana.write(CC18, 1, 1) second byte 0 = off 1 = on
 const unsigned long Loop = 0x60000655;   // turn loop off on
 //const unsigned long rvbRed = 0x60001214; // set reverb type to red
 const unsigned long rvbYellow = 0x60001214; // set reverb type to yellow
