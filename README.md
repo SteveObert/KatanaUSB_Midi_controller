@@ -18,6 +18,13 @@ part of the sysex header from 0x3b to 0x33 for Katana
       const byte MS3_HEADER[6] = {0x41, 0x00, 0x00, 0x00, 0x00, 0x33};
    
    
+* Note I had to compile the sketch 72MHz and "fast" (debug also works), otherwise the USB mini host shield wouldn't work. I also specified "Serial + MIDI" for testing and just "MIDI" when powered externally (not connected to a computer).
+
+* Also, I originally tested this project with an Arduino Nano and I "cut the trace inside VBUS jumper" on the host shield as mentioned in the second paragraph under the Power Options part of this page: https://www.circuitsathome.com/usb-host-shield-hardware-manual/ shown here: https://www.pjrc.com/teensy/td_libs_USBHostShield.html. I googled these pictures: [url=https://geekhack.org/index.php?PHPSESSID=jnim6u2dcno62u8vpbm8sl9ias67hb3o&action=dlattach;topic=80421.0;attach=130856;image]https://geekhack.org/index.php?PHPSESSID=jnim6u2dcno62u8vpbm8sl9ias67hb3o&action=dlattach;topic=80421.0;attach=130856;image[/url] and [url=https://geekhack.org/index.php?PHPSESSID=jnim6u2dcno62u8vpbm8sl9ias67hb3o&action=dlattach;topic=80421.0;attach=130858;image]https://geekhack.org/index.php?PHPSESSID=jnim6u2dcno62u8vpbm8sl9ias67hb3o&action=dlattach;topic=80421.0;attach=130858;image[/url]
+
+I haven't tested the current sketch with anything other than a Teensy 3.2.
+
+
 Here is some excellent information about sysex messages and Katana amps: https://github.com/snhirsch/katana-midi-bridge/blob/master/doc/katana_sysex.txt
 
 
