@@ -172,6 +172,12 @@ void updateLCD1 (void) {
   //    Serial.println(message3);
 }
 
+void clearFX (void) {
+  message1 = "FX1 off    ";
+  message2 = "FX2 off    ";
+  message3 = "FX3 off    ";
+  message4 = "Loop on ";
+}
 
 //###########################
 //###########################
@@ -279,6 +285,7 @@ void loop() {
       currentChannel = 1;
       katana.write(PC, currentChannel, 2);
       chnMode = 0;
+      clearFX();
       updateLCD1();
     }
     else if (chnMode == 2) {
@@ -287,6 +294,7 @@ void loop() {
       currentChannel = 5;
       katana.write(PC, currentChannel, 2);
       chnMode = 0;
+      clearFX();
       updateLCD1();
     }
     else if  (effectsState1 == 0 ) {
@@ -314,6 +322,7 @@ void loop() {
       currentChannel = 2;
       katana.write(PC, currentChannel, 2);
       chnMode = 0;
+      clearFX();
       updateLCD1();
     }
     else if (chnMode == 2) {
@@ -322,6 +331,7 @@ void loop() {
       currentChannel = 6;
       katana.write(PC, currentChannel, 2);
       chnMode = 0;
+      clearFX();
       updateLCD1();
     }
     else if  (effectsState2 == 0 ) {
@@ -349,6 +359,7 @@ void loop() {
       currentChannel = 3;
       katana.write(PC, currentChannel, 2);
       chnMode = 0;
+      clearFX();
       updateLCD1();
     }
     else if (chnMode == 2) {
@@ -357,6 +368,7 @@ void loop() {
       currentChannel = 7;
       katana.write(PC, currentChannel, 2);
       chnMode = 0;
+      clearFX();
       updateLCD1();
     }
     else if  (effectsState3 == 0 ) {
@@ -384,6 +396,7 @@ void loop() {
       currentChannel = 4;
       katana.write(PC, currentChannel, 2);
       chnMode = 0;
+      clearFX();
       updateLCD1();
     }
     else if (chnMode == 2) {
@@ -392,6 +405,7 @@ void loop() {
       currentChannel = 8;
       katana.write(PC, currentChannel, 2);
       chnMode = 0;
+      clearFX();
       updateLCD1();
     }
     else if  (fxLoopstate == 0 ) {
