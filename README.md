@@ -7,7 +7,7 @@ This is working prototype of a MIDI foot controller for a BOSS Katana using a Te
 
 It seems reliable to me; however, it's not been tested by anyone but me. I'm not an experienced programmer so there's lots of room for optimization. Additionally, work needs to be done on the effect status messages. Right now, they are setup for the way I use the Katana - when I switch amp channels I have all effects set to off. So, you'll need to change the programming if you use it differently. I'm working on a way to read FX status updates from the Katana but don't have it working yet.
 
-* Note I had to compile the sketch 72MHz and "fast" (debug also works), otherwise the USB mini host shield wouldn't work. I also specified "Serial + MIDI" for testing and just "MIDI" when powered externally (not connected to a computer).
+* Note I had to compile the sketch with the "fast" setting (debug also works), otherwise the USB mini host shield wouldn't work. I also specified "Serial + MIDI" for testing and just "MIDI" when powered externally (not connected to a computer).
 
 Along with the Teensy 3.2, I use a Mini USB Host shield like this one: https://www.circuitsathome.com/usb-host-shield-hardware-manual/ along with the host shield library: https://github.com/felis/USB_Host_Shield_2.0.
 
