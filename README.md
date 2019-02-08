@@ -23,7 +23,7 @@ part of the sysex header from 0x3b to 0x33 for Katana
 Here is some excellent information about sysex messages and Katana amps: https://github.com/snhirsch/katana-midi-bridge/blob/master/doc/katana_sysex.txt
 
 
-The working prototype usesthe library https://github.com/felis/USB_Host_Shield_2.0 and a USB host shield
+The working prototype uses the library https://github.com/felis/USB_Host_Shield_2.0 and a USB host shield
 (https://www.amazon.com/gp/product/B0777DR3T6/ref=ppx_yo_dt_b_asin_title_o03__o00_s00?ie=UTF8&psc=1)
 
 I used a MIDI break out board but there no reason not to build your own MIDI in/out circuit. https://www.amazon.com/ubld-it-MIDI-Breakout-Board/dp/B00YDLVLVO/ref=sr_1_fkmr0_2?ie=UTF8&qid=1549302443&sr=8-2-fkmr0&keywords=midi+host+shield
