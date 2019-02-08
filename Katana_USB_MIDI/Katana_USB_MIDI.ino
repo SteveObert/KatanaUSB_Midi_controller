@@ -39,12 +39,9 @@ int midiByte = 0 ;
 int type, channel, data1, data2, number, value;
 const unsigned long msg = 0;
 int chnMode = 0;
-//char* message[]={"PC 1", "PC 2", "PC 3", "PC 4", "PC 5","PC 6", "PC 7","PC 8"};
-//char* effectsButton[] = {"On", "Off"};
 unsigned long previousMillis = 0;         // will store last time LED was updated - used for blinking when select bank 2 is active
 const long interval = 300;                // blink time for  select bank 2 is active
 int ledState = LOW;                       // blink time for  select bank 2 is active
-
 
 // sysex define ################################
 const unsigned long PC = 0x00010000; // change channel katana.write(PC, 1, 2) second byte is channel number 3rd is length
@@ -56,7 +53,6 @@ const unsigned long rvbYellow = 0x60001214; // set reverb type to yellow
 //const unsigned long wah = 0x6000015C ; // set wah type ??
 const unsigned long express = 0x6000015D; // expression pedal position ??
 const unsigned long VOLUME_PEDAL_ADDR = 0x60000633; // volume pedal address
-
 // end sysex define ##############################
 
 //###########################
@@ -436,67 +432,66 @@ void loop() {
 
 
   // Check incoming serial MIDI and translate CC and PC mesages to Katana sysex
-  if (MIDI.read())                // Is there a MIDI message incoming ?
-  {
-    switch (MIDI.getType())     // Get the type of the message we caught
-    {
+  if (MIDI.read()) {                // Is there a MIDI message incoming ?
+    channel = MIDI.getChannel();
+    if (channel == 2) {             // Listen to messages only on MIDI channel 2
+      switch (MIDI.getType()) {     // Get the type of the message we caught
 
-      case midi::ProgramChange:
-        channel = MIDI.getChannel();
-        number = MIDI.getData1();
-        //lcd1.clear();
-        lcd1.setCursor(0, 1);
-        lcd1.print(String("Amp Ch:  ") + number + (" ,Value ") + MIDI.getData2());
-        //lcd1.setCursor(0, 1);
-        //lcd1.print(String("Chan ") + channel + (",Value ") + MIDI.getData2());
-        Serial.println(String("Prog.Ch") + (" Pgrm#") + number);
-        Serial.println(String("Chan ") + channel + (" Value ") + MIDI.getData2());
-        if (channel == 2) {
-          katana.write(PC, number, 2);
-        }
-        break;
-      case midi::ControlChange:
-        channel = MIDI.getChannel();
-        number = MIDI.getData1();
-        value = MIDI.getData2();
-        //lcd1.clear();
-        //lcd1.setCursor(0, 2);
-        //lcd1.print(String("Ctl.Ch") + (", CC# ") + number);
-        lcd1.setCursor(12, 2);
-        lcd1.print(String("Val ") + MIDI.getData2());
-        Serial.println(String("Ctl.Ch") + (", CC#") + number);
-        Serial.println(String("Chan ") + channel + (",Value ") + MIDI.getData2());
-        if (channel == 2 && number == 16) {
-          katana.write(CC16, value, 1);
-        }
-        if (channel == 2 && number == 17) {
-          katana.write(CC17, value, 1);
-        }
-        if (channel == 2 && number == 18) {
-          katana.write(CC18, value, 1);
-        }
-        if (channel == 2 && number == 19) {
-          katana.write(Loop, value, 1);
-        }
-        if (channel == 2 && number == 20) {
-          katana.write(rvbYellow, value, 1);
-        }
-        if (channel == 2 && number == 120) {
-          katana.write(express, value, 2);
-        }
-        break;
-      case midi::SystemExclusive:
-        channel = MIDI.getChannel();
-        lcd1.clear();
-        lcd1.setCursor(0, 2);
-        lcd1.print("Sysex");
-        lcd1.setCursor(0, 3);
-        lcd1.print(String("Chan ") + channel + (",Value ") + MIDI.getData2());
-        Serial.println("Sysex");
-        Serial.println(String("Chan ") + channel + (",Value ") + MIDI.getData2());
-        break;
-      default:
-        break;
+        case midi::ProgramChange:
+          number = MIDI.getData1();
+          if (number < 9) {
+            lcd1.setCursor(0, 1);
+            lcd1.print(String("Amp Ch:  ") + number + (" ,Value ") + MIDI.getData2());
+            //lcd1.setCursor(0, 1);
+            //lcd1.print(String("Chan ") + channel + (",Value ") + MIDI.getData2());
+            Serial.println(String("Prog.Ch") + (" Pgrm#") + number);
+            Serial.println(String("Chan ") + channel + (" Value ") + MIDI.getData2());
+            katana.write(PC, number, 2);
+          }
+          break;
+        
+        case midi::ControlChange:
+          number = MIDI.getData1();
+          value = MIDI.getData2();
+          lcd1.setCursor(12, 2);
+          lcd1.print(String("Val ") + MIDI.getData2());
+          Serial.println(String("Ctl.Ch") + (", CC#") + number);
+          Serial.println(String("Chan ") + channel + (",Value ") + MIDI.getData2());
+          if (number == 16) {
+            katana.write(CC16, value, 1);
+          }
+          if (number == 17) {
+            katana.write(CC17, value, 1);
+          }
+          if (number == 18) {
+            katana.write(CC18, value, 1);
+          }
+          if (number == 19) {
+            katana.write(Loop, value, 1);
+          }
+          if (number == 20) {
+            katana.write(rvbYellow, value, 1);
+          }
+          //        if (channel == 2 && number == 119) {
+          //          katana.write(wah, 02, 1);
+          //        }
+          if (number == 120) {
+            katana.write(express, value, 2);
+          }
+          break;
+        
+        case midi::SystemExclusive:
+          lcd1.clear();
+          lcd1.setCursor(0, 2);
+          lcd1.print("Sysex");
+          lcd1.setCursor(0, 3);
+          lcd1.print(String("Chan ") + channel + (",Value ") + MIDI.getData2());
+          Serial.println("Sysex");
+          Serial.println(String("Chan ") + channel + (",Value ") + MIDI.getData2());
+          break;
+        default:
+          break;
+      }
     }
   }
 }
