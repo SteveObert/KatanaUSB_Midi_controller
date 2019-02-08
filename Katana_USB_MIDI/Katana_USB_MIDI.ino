@@ -24,7 +24,7 @@ const int led1 = A0;
 const int led2 = A1;
 const int led3 = A2;
 const int led4 = A3;
-const int led5 = A6;
+const int led5 = 8;
 byte ledArray[] = {led1, led2, led3, led4, led5};
 int effectsState1 = 0;
 int effectsState2 = 0;
@@ -52,8 +52,11 @@ const unsigned long CC16 = 0x60000030; //turn button 1 on  katana.write(CC16, 1,
 const unsigned long CC17 = 0x6000034C; //turn button 2 on  katana.write(CC17, 1, 1) second byte 0 = off 1 = on
 const unsigned long CC18 = 0x60000610; //turn reverb on  katana.write(CC18, 1, 1) second byte 0 = off 1 = on
 const unsigned long Loop = 0x60000655;   // turn loop off on
-//const unsigned long rvbRed = 0x60001214; // set reverb type to red
 const unsigned long rvbYellow = 0x60001214; // set reverb type to yellow
+//const unsigned long wah = 0x6000015C ; // set wah type ??
+const unsigned long express = 0x6000015D; // expression pedal position ??
+const unsigned long VOLUME_PEDAL_ADDR = 0x60000633; // volume pedal address
+
 // end sysex define ##############################
 
 //###########################
@@ -173,14 +176,15 @@ void updateLCD1 (void) {
 }
 
 void clearFX (void) {
-  message1 = "FX1 off    ";
+  message1 = "FX1 off     ";
   message2 = "FX2 off    ";
-  message3 = "FX3 off    ";
+  message3 = "Rvb off    ";
   message4 = "Loop on ";
   effectsState1 = 0;
   effectsState2 = 0;
   effectsState3 = 0;
   fxLoopstate = 1;
+  digitalWrite(led5, HIGH);
 }
 
 //###########################
@@ -380,7 +384,7 @@ void loop() {
       digitalWrite(led4, HIGH);
       effectsState3 = 1;
       katana.write(CC18, 1, 1);;
-      message3 = "FX3 on    ";
+      message3 = "Rvb on    ";
       updateLCD1();
     }
     else  {
@@ -388,7 +392,7 @@ void loop() {
       digitalWrite(led4, LOW);
       effectsState3 = 0;
       katana.write(CC18, 0, 1);;
-      message3 = "FX3 off    ";
+      message3 = "Rvb off    ";
       updateLCD1();
     }
   }
@@ -445,8 +449,8 @@ void loop() {
         lcd1.print(String("Amp Ch:  ") + number + (" ,Value ") + MIDI.getData2());
         //lcd1.setCursor(0, 1);
         //lcd1.print(String("Chan ") + channel + (",Value ") + MIDI.getData2());
-        Serial.println(String("Prog.Ch") + (",Pgrm#") + number);
-        Serial.println(String("Chan ") + channel + (",Value ") + MIDI.getData2());
+        Serial.println(String("Prog.Ch") + (" Pgrm#") + number);
+        Serial.println(String("Chan ") + channel + (" Value ") + MIDI.getData2());
         if (channel == 2) {
           katana.write(PC, number, 2);
         }
@@ -455,11 +459,11 @@ void loop() {
         channel = MIDI.getChannel();
         number = MIDI.getData1();
         value = MIDI.getData2();
-        lcd1.clear();
-        lcd1.setCursor(0, 2);
-        lcd1.print(String("Ctl.Ch") + (", CC# ") + number);
-        lcd1.setCursor(0, 3);
-        lcd1.print(String("Value: ") + MIDI.getData2());
+        //lcd1.clear();
+        //lcd1.setCursor(0, 2);
+        //lcd1.print(String("Ctl.Ch") + (", CC# ") + number);
+        lcd1.setCursor(12, 2);
+        lcd1.print(String("Val ") + MIDI.getData2());
         Serial.println(String("Ctl.Ch") + (", CC#") + number);
         Serial.println(String("Chan ") + channel + (",Value ") + MIDI.getData2());
         if (channel == 2 && number == 16) {
@@ -476,6 +480,9 @@ void loop() {
         }
         if (channel == 2 && number == 20) {
           katana.write(rvbYellow, value, 1);
+        }
+        if (channel == 2 && number == 120) {
+          katana.write(express, value, 2);
         }
         break;
       case midi::SystemExclusive:
