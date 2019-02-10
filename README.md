@@ -39,3 +39,7 @@ and https://geekhack.org/index.php?PHPSESSID=jnim6u2dcno62u8vpbm8sl9ias67hb3o&ac
 
 I haven't tested the current sketch with anything other than a Teensy 3.2.
 
+
+Inside view with messy wiring and extra holes from a previous project:
+![alt text](https://raw.githubusercontent.com/SteveObert/KatanaUSB_Midi_controller/master/images/IMG_2526.JPG)
+
