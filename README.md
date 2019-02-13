@@ -13,7 +13,7 @@ In the Katana_USB_MIDI_auto version LCD and LEDs are updated from the Katana's U
 
 **Consider this unsupported beta software.**
 
-* Note I had to compile the sketch with the "fast + LTO" setting (debug also works), otherwise the USB mini host shield wouldn't work. I also specified "Serial + MIDI" for testing and just "MIDI" when powered externally (not connected to a computer).
+* Note I had to compile the sketch with the "fast + LTO" setting (debug also works), otherwise the USB mini host shield wouldn't work. You must select the Teensy option "MIDI" when powered externally (not connected to a computer). Also, you should use the modified versions of the MS3 and LiquidCrystal_I2C libraries included above.
 
 Along with the Teensy 3.2, I use a Mini USB Host shield like this one: https://www.circuitsathome.com/usb-host-shield-hardware-manual/ along with the host shield library: https://github.com/felis/USB_Host_Shield_2.0.
 
