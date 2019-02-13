@@ -3,11 +3,17 @@
 
 ![alt text](https://raw.githubusercontent.com/SteveObert/KatanaUSB_Midi_controller/master/images/IMG_2515.JPG)
 
-This is working prototype of a MIDI foot controller for a BOSS Katana using a Teensy 3.2. The foot controller sends sysex messages to the USB port on the Katana. The code emulates a GA-FC without a Tap Tempo switch and without additional footswitch connections (although there doesn’t seem to be any reason that’s not possible). The controller can also listen to a 5 pin MIDI IN port and can be programed to translate MIDI messages (PC, CC, etc.) to sysex and forward those to a Katana. However, you must know the Katana sysex. Sending MIDI out from the footswitch is also possible.
+This is working prototype of a MIDI foot controller for a BOSS Katana using a Teensy 3.2. The foot controller sends sysex messages to the USB port on the Katana. The code emulates a GA-FC without a Tap Tempo switch and without additional footswitch connections (although there doesn’t seem to be any reason that’s not possible). The controller can also listen to a 5 pin MIDI IN port and can be programed to translate MIDI messages (PC, CC, etc.) to sysex and forward those to a Katana. However, you must know the Katana sysex. Sending MIDI OUT from the footswitch is also possible.
 
-It seems reliable to me; however, it's not been tested by anyone but me. I'm not an experienced programmer so there's lots of room for optimization. Additionally, work needs to be done on the effect status messages. Right now, they are setup for the way I use the Katana - when I switch amp channels I have all effects set to off. So, you'll need to change the programming if you use it differently. I'm working on a way to read FX status updates from the Katana but don't have it working yet.
+It seems reliable to me; however, it's not been tested by anyone but me. I'm not an experienced programmer so there's lots of room for optimization. 
 
-* Note I had to compile the sketch with the "fast" setting (debug also works), otherwise the USB mini host shield wouldn't work. I also specified "Serial + MIDI" for testing and just "MIDI" when powered externally (not connected to a computer).
+In the Simple sketch version, you will need to code the LCD and LEDs to work for your needs. Right now, they are setup for the way I use the Katana - when I switch amp channels I have all effects set to off. So, you'll need to change the programming if you use it differently.
+
+In the Katana_USB_MIDI_auto version LCD and LEDs are updated from the Katana's USB MIDI messages. Meaning, they should take of themselves. 
+
+**Consider this unsupported beta software.**
+
+* Note I had to compile the sketch with the "fast + LTO" setting (debug also works), otherwise the USB mini host shield wouldn't work. I also specified "Serial + MIDI" for testing and just "MIDI" when powered externally (not connected to a computer).
 
 Along with the Teensy 3.2, I use a Mini USB Host shield like this one: https://www.circuitsathome.com/usb-host-shield-hardware-manual/ along with the host shield library: https://github.com/felis/USB_Host_Shield_2.0.
 
