@@ -1,4 +1,7 @@
 /**
+**************************
+Gumtown's update
+**************************
  * This is a simple library to control the Boss MS-3.
  *
  * Check README.md or visit https://github.com/MrHaroldA/MS3 for more information.
@@ -43,16 +46,15 @@ const byte MS3_WRITE_INTERVAL_MSEC = 4;
 #endif
 
 #ifndef MS3_READ_INTERVAL_MSEC
-const byte MS3_READ_INTERVAL_MSEC = 25;
+const byte MS3_READ_INTERVAL_MSEC = 50;
 #endif
 
 #ifndef MS3_RECEIVE_INTERVAL_MSEC
-const byte MS3_RECEIVE_INTERVAL_MSEC = 4;
+const byte MS3_RECEIVE_INTERVAL_MSEC = 40;
 #endif
 
-// Changed last from 0x3b to 0x33 for katana
 #ifndef MS3_HEADER
-const byte MS3_HEADER[6] = {0x41, 0x00, 0x00, 0x00, 0x00, 0x33};
+const byte MS3_HEADER[6] = {0x41, 0x00, 0x00, 0x00, 0x00, 0x33};  //Katana header
 #endif
 
 #ifndef MS3_QUEUE_SIZE
@@ -92,7 +94,6 @@ const int8_t MS3_IDLE = 6;
 // Fixed data.
 const byte SYSEX_START = 0xF0;
 const byte SYSEX_END = 0xF7;
-const byte HANDSHAKE[15] = {0xF0, 0x7E, 0x00, 0x06, 0x02, 0x41, 0x3B, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF7};
 const unsigned long P_EDIT = 0x7F000001;
 
 // Load the Queue class.
@@ -267,16 +268,22 @@ class MS3 : public USBH_MIDI {
          * Init the editor mode.
          */
         void setEditorMode() {
-            MS3::send((byte *) HANDSHAKE);
-            delay(MS3_WRITE_INTERVAL_MSEC);
-            MS3::send((byte *) HANDSHAKE);
-            delay(MS3_WRITE_INTERVAL_MSEC);
-            byte data[1] = {0x01};
+            byte data[1] = {0x01};            
             MS3::send(P_EDIT, data, 1, MS3_WRITE);
             delay(INIT_DELAY_MSEC);
-            MS3_DEBUGLN(F("*** Up and ready!"));
+            MS3_DEBUGLN(F("*** Editor mode set!"));
         }
 
+        /**
+         * unset the editor mode.
+         */
+        void unSetEditorMode() {
+            byte data[1] = {0x00};            
+            MS3::send(P_EDIT, data, 1, MS3_WRITE);
+            delay(INIT_DELAY_MSEC);
+            MS3_DEBUGLN(F("*** Editor mode unset!"));
+        }
+        
         /**
          * This is the main function for both receiving and sending data when
          * there's nothing to receive.
