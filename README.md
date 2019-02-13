@@ -17,14 +17,7 @@ In the Katana_USB_MIDI_auto version LCD and LEDs are updated from the Katana's U
 
 Along with the Teensy 3.2, I use a Mini USB Host shield like this one: https://www.circuitsathome.com/usb-host-shield-hardware-manual/ along with the host shield library: https://github.com/felis/USB_Host_Shield_2.0.
 
-Roland/Boss guitar gear uses a non-class compliant USB device for midi control. Additionally, there is a checksum included in each sysex message. I found this library made for the BOSS MS3:  https://github.com/MrHaroldA/MS3.
-
-I was able to modify one line of code in the MS3.h file in order to get it to work with a BOSS Katana amplifier. I changed 
-part of the sysex header from 0x3b to 0x33 for Katana
-
-      #ifndef MS3_HEADER
-      const byte MS3_HEADER[6] = {0x41, 0x00, 0x00, 0x00, 0x00, 0x33};
-   
+Roland/Boss guitar gear uses a non-class compliant USB device for midi control. Additionally, there is a checksum included in each sysex message. I found this library made for the BOSS MS3:  https://github.com/MrHaroldA/MS3. Note, this library is included in the files above and has been modified to work with the Katana instead of the MS3.
    
 Here is some excellent information about sysex messages and Katana amps: https://github.com/snhirsch/katana-midi-bridge/blob/master/doc/katana_sysex.txt
 
