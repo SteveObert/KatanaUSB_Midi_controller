@@ -11,13 +11,13 @@ In the Simple sketch version, you will need to code the LCD and LEDs to work for
 
 In the Katana_USB_MIDI_auto version LCD and LEDs are updated from the Katana's USB MIDI messages. Meaning, they should take of themselves. 
 
-**Consider this unsupported beta software.**
+**Consider this unsupported beta software.** If you get stuck I may not be able to help you.
 
-* Note I had to compile the sketch with the "fast + LTO" setting (debug also works), otherwise the USB mini host shield wouldn't work. You must select the Teensy option "MIDI" when powered externally (not connected to a computer). Also, you should use the modified versions of the MS3 and LiquidCrystal_I2C libraries included above.
+* Note I had to compile the sketch with the "fast + LTO" setting (debug also works), otherwise the USB mini host shield wouldn't work. You must select the Teensy option "MIDI" when powered externally (not connected to a computer). Also, you should use the modified versions of the MS3 and LiquidCrystal_I2C libraries included above (top of page).
 
 Along with the Teensy 3.2, I use a Mini USB Host shield like this one: https://www.circuitsathome.com/usb-host-shield-hardware-manual/ along with the host shield library: https://github.com/felis/USB_Host_Shield_2.0.
 
-Roland/Boss guitar gear uses a non-class compliant USB device for midi control. Additionally, there is a checksum included in each sysex message. I found this library made for the BOSS MS3:  https://github.com/MrHaroldA/MS3. Note, this library is included in the files above and has been modified to work with the Katana instead of the MS3.
+Roland/Boss guitar gear uses a non-class compliant USB device for midi control. Additionally, there is a checksum included in each sysex message. I found this library made for the BOSS MS3:  https://github.com/MrHaroldA/MS3. Note, this library is included in the files above (top of page) and has been modified to work with the Katana instead of the MS3.
    
 Here is some excellent information about sysex messages and Katana amps: https://github.com/snhirsch/katana-midi-bridge/blob/master/doc/katana_sysex.txt
 
