@@ -7,9 +7,11 @@ This is working prototype of a MIDI foot controller for a BOSS Katana using a Te
 
 It seems reliable to me; however, it's not been tested by anyone but me. I'm not an experienced programmer so there's lots of room for optimization. 
 
+There are two versions:
+
 In the Simple sketch version, you will need to code the LCD and LEDs to work for your needs. Right now, they are setup for the way I use the Katana - when I switch amp channels I have all effects set to off. So, you'll need to change the programming if you use it differently.
 
-In the Katana_USB_MIDI_auto version LCD and LEDs are updated from the Katana's USB MIDI messages. Meaning, they should take of themselves. 
+In the Katana_USB_MIDI_auto version LCD and LEDs are updated from the Katana's USB MIDI messages. Meaning, they should take of themselves. Gumtown from the Vguitar forum deserves recognition for witing the LCD and LED updates working.
 
 **Consider this unsupported beta software.** If you get stuck I may not be able to help you.
 
