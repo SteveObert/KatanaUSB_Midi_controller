@@ -4,7 +4,7 @@
 
 #include <inttypes.h>
 #include "Print.h" 
-#include <i2c_t3.h>
+#include <i2c_t3.h> //for use with Tensy i2c
 //#include <Wire.h>
 
 // commands
