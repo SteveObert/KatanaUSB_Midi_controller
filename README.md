@@ -11,7 +11,7 @@ There are two versions:
 
 In the Simple sketch version, you will need to code the LCD and LEDs to work for your needs. Right now, they are setup for the way I use the Katana - when I switch amp channels I have all effects set to off. So, you'll need to change the programming if you use it differently.
 
-In the Katana_USB_MIDI_auto version, LCD and LEDs are updated from the Katana's USB MIDI messages. Meaning, they should take of themselves. Gumtown from the Vguitar forum deserves recognition for his contributions writng the code that parses incoming data and updates the LCD and LEDs.
+In the Katana_USB_MIDI version, LCD and LEDs are updated from the Katana's USB MIDI messages. Meaning, they should take of themselves. Gumtown from the Vguitar forum deserves recognition for rewriting most of the code and adding a great deal of functionality.
 
 **Consider this unsupported beta software.** If you get stuck I may not be able to help you.
 
