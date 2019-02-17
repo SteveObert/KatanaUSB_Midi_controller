@@ -21,7 +21,7 @@ inline void LiquidCrystal_I2C::write(uint8_t value) {
 }
 
 #endif
-#include "i2c_t3.h"
+#include "i2c_t3.h" // teensy i2c library
 //#include "Wire.h"
 
 
