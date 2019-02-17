@@ -4,6 +4,7 @@ This version id modified to use Teensy's i2c library:
 Simply:
 
 #include "i2c_t3.h"
+<br>
 //#include "Wire.h"
 
 
