@@ -1,7 +1,7 @@
 # A USB MIDI foot controller/translator
 # for Boss Katana amplifiers.
 
-![alt text](https://raw.githubusercontent.com/SteveObert/KatanaUSB_Midi_controller/master/images/IMG_2515.JPG)
+![alt text](https://raw.githubusercontent.com/SteveObert/KatanaUSB_Midi_controller/master/images/IMG_2516.JPG)
 
 This is working prototype of a MIDI foot controller for a BOSS Katana using a Teensy 3.2. The foot controller sends sysex messages to the USB port on the Katana. The code emulates a GA-FC without additional footswitch connections (although there doesn’t seem to be any reason that’s not possible). I'm working on an expression pedal input. An expression pedal attached to an external MIDI controller can be used but requires you to adjust/write some code.
 
