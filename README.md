@@ -8,11 +8,10 @@ This is working prototype of a MIDI foot controller for a BOSS Katana using a Te
 This controller can also listen to a 5 pin MIDI IN port and can be programed to translate MIDI messages (PC, CC, etc.) to sysex and forward those to a Katana. However, you must know the Katana sysex. Sending MIDI OUT from the footswitch is also possible.
 
 It seems satable; however, it has only been tested by two people that I am aware of.
+
 **Consider this unsupported beta software. ** If you get stuck, I may not be able to help you.
 
 There are two versions:
-
-In the Simple sketch version, you will need to code the LCD and LEDs to work for your needs. Right now, they are setup for the way I use the Katana - when I switch amp channels I have all effects set to off. So, you'll need to change the programming if you use it differently. On this version there is no tap-tempo and no expression pedal input. The simple version should run on an Ardiuno Nano or Uno, etc. because that's what I started writing the code for. However, I have not tested it recently.
 
 In the Katana_USB_MIDI version, LCD and LEDs are updated from the Katana's USB MIDI messages. Meaning, they should take of themselves. Gumtown from the Vguitar forum deserves recognition for rewriting most of the code and adding a great deal of functionality. There is a forum thread reguarding updates and functions: https://www.vguitarforums.com/smf/index.php?topic=25185.0 
 
@@ -36,9 +35,10 @@ Included in the : Katana_USB_MIDI version
 * There is also a BOM (parts list) in this thread. this version has been tested on a Teensy 3.2 and a Teensy LC.
 
 
+In the Simple sketch version, you will need to code the LCD and LEDs to work for your needs. The LCD and LEDs are programed to be off when you switch channels, meaning the controller expects all effects to be off. So, you'll need to change the programming if you use it differently. On this version there is no tap-tempo and no expression pedal input. The simple version should run on an Ardiuno Nano or Uno, etc. because that's what I started writing the code for. However, I have not tested it recently.
 
 
-** Note I had to compile the sketch with the "fast + LTO" setting (debug also works), otherwise the USB mini host shield would not work. You must select the Teensy option "MIDI" when powered externally (not connected to a computer). Also, you should use the modified versions of the MS3 library included above (top of page).
+** Note I had to compile the sketches with the "fast + LTO" setting or debug, otherwise the USB mini host shield would not work. You must select the Teensy option "MIDI" when powered externally (not connected to a computer). Also, you should use the modified versions of the MS3 library included above (top of page).
 
 Along with the Teensy 3.2, I use a Mini USB Host shield like this one: https://www.circuitsathome.com/usb-host-shield-hardware-manual/ along with the host shield library: https://github.com/felis/USB_Host_Shield_2.0.
 
