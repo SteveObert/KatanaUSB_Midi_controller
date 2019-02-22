@@ -1,0 +1,17 @@
+﻿Teensy 3.2 or LC ,https://www.pjrc.com/store/teensy32.html
+USB mini host shield,https://www.amazon.com/dp/B01EWW9R1E/?coliid=ILRDGVK1ADBLT&colid=34R848U9NQQ2P&psc=0&ref_=lv_ov_lig_dp_it
+20x4 LCD with I2C backpack: (note you only need one):,https://www.amazon.com/JANSANE-Arduino-Display-Interface-Raspberry/dp/B07D7ZQVDR/ref=sr_1_4?s=electronics&ie=UTF8&qid=1550098728&sr=1-4&keywords=20x4+lcd+display
+5 LEDs,
+5 resistors for LEDs,
+5 LED bezels,
+5 normally open momentary footswitches. , https://lovemyswitches.com/spst-momentary-foot-switch-normally-open-soft-touch/
+Power jack for use with pedal board power supply  (optional),https://lovemyswitches.com/lumberg-switched-dc-power-jack-2-1mm/
+Strip (vero or tag) board used to solder wiring,https://www.adafruit.com/product/1609
+Female header pins for the strip board and Teensy/mini usb shield.,
+Some type of footswitch enclosure. I used one of these:,https://www.ebay.com/itm/Aluminum-DIY-Project-Box-Enclosure-Case-PCB-Amplifier-Electronic-200-105-55mm/142615103868?ssPageName=STRK%3AMEBIDX%3AIT&_trksid=p2057872.m2749.l2649
+USB micro to USB Female B panel mount cable: (optional),https://www.ebay.com/itm/USB-Cable-Panel-Mount-Type-B-Female-to-Micro-B-Male-Enclosure-Case-Raspberry-Pi/181687616398?ssPageName=STRK%3AMEBIDX%3AIT&_trksid=p2057872.m2749.l2649
+Panel mount USB cable. Example,https://www.adafruit.com/product/908
+9v to 5v step down power converter (optional for using with 9v),https://www.ebay.com/itm/LM2596S-DC-DC-3A-Buck-Adjustable-Step-down-Power-Supply-Converter-Module-Arduino/382552225398?ssPageName=STRK%3AMEBIDX%3AIT&_trksid=p2057872.m2749.l2649
+MIDI “breakout board” or make your own MIDI IN/OUT circuit.,https://www.amazon.com/ubld-it-MIDI-Breakout-Board/dp/B00YDLVLVO/ref=pd_sim_328_5/130-4985278-1604149?_encoding=UTF8&pd_rd_i=B00YDLVLVO&pd_rd_r=3963793b-2fe4-11e9-9ca9-bfc9d94bcb73&pd_rd_w=6lf6F&pd_rd_wg=Nzpsl&pf_rd_p=90485860-83e9-4fd9-b838-b28a9b7fda30&pf_rd_r=8DH8A51JVD10GJG9YYZ8&psc=1&refRID=8DH8A51JVD10GJG9YYZ8
+A bezel for the LCD. Make your own,https://www.tindie.com/products/WIDGENEERING/20x4-lcd-bezel-with-clear-backplate/
+"Stand offs, bolts , and nuts to mount LCD and other stuff to enclosure.",
