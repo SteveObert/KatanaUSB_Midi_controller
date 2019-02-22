@@ -17,24 +17,24 @@ In the Katana_USB_MIDI version, LCD and LEDs are updated from the Katana's USB M
 
 Included in the : Katana_USB_MIDI version
 
-[list]
-[li]Tap tempo: global or patch[/li]
 
-[li]Selectable mode for 3 foot switches, toggle either one or both FX/MOD, Delay 1/FX, and Reverb/Delay 2.[/li]
+Tap tempo: global or patch.
 
-[li]Midi IN - control Katana patch and FX from an external MIDI controller.  [i][b]Some[/b][/i] CC and PC messages from the MIDI in port can be received and translated to sysex and forwarded to the Katana. If you’re looking for a more complete external MIDI to Katana you could buy the MIDX-20.[/li]
+Selectable mode for 3 foot switches, toggle either one or both FX/MOD, Delay 1/FX, and Reverb/Delay 2.
 
-[li]LCD displays FX status, amp name, tempo, loop status, bank/fx mode, and channel number.[/li]
+Midi IN - control Katana patch and FX from an external MIDI controller.  [i][b]Some[/b][/i] CC and PC messages from the MIDI in port can be received and translated to sysex and forwarded to the Katana. If you’re looking for a more complete external MIDI to Katana you could buy the MIDX-20.
 
-[li]Select Green, Yellow, or Red effect functions from the three lower foot switches.[/li]
+LCD displays FX status, amp name, tempo, loop status, bank/fx mode, and channel number.
 
-[li]An expression pedal can be connected to an external MIDI controller to control 1 effect only. This is experimental and requires some coding on your part.[/li]
+Select Green, Yellow, or Red effect functions from the three lower foot switches.
 
-[li]Expression pedal jack input directly connected to controller and external MIDI clock IN is being worked on but not yet complete, no ETA.[/li]
+An expression pedal can be connected to an external MIDI controller to control 1 effect only. This is experimental and requires some coding on your part.
 
-[li]There is also a BOM (parts list) in this thread. this version has been tested on a Teensy 3.2 and a Teensy LC.[/li]
+Expression pedal jack input directly connected to controller and external MIDI clock IN is being worked on but not yet complete, no ETA.
 
-[/list]
+There is also a BOM (parts list) in this thread. this version has been tested on a Teensy 3.2 and a Teensy LC.
+
+
 
 
 **Consider this unsupported beta software. ** If you get stuck, I may not be able to help you.
