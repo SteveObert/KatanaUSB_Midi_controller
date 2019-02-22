@@ -7,15 +7,31 @@ This is working prototype of a MIDI foot controller for a BOSS Katana using a Te
 
 This controller can also listen to a 5 pin MIDI IN port and can be programed to translate MIDI messages (PC, CC, etc.) to sysex and forward those to a Katana. However, you must know the Katana sysex. Sending MIDI OUT from the footswitch is also possible.
 
-It seems satable; however, it had only been tested by two people that I am aware of.
+It seems satable; however, it has only been tested by two people that I am aware of.
 
 There are two versions:
 
 In the Simple sketch version, you will need to code the LCD and LEDs to work for your needs. Right now, they are setup for the way I use the Katana - when I switch amp channels I have all effects set to off. So, you'll need to change the programming if you use it differently. On this version there is no tap-tempo and no expression pedal input. The simple version should run on an Ardiuno Nano or Uno, etc. because that's what I started writing the code for. However, I have not tested it recently.
 
-In the Katana_USB_MIDI version, LCD and LEDs are updated from the Katana's USB MIDI messages. Meaning, they should take of themselves. Gumtown from the Vguitar forum deserves recognition for rewriting most of the code and adding a great deal of functionality. There is a forum thread reguarding updates and functions: https://www.vguitarforums.com/smf/index.php?topic=25185.0 There is also a BOM (parts list) in this thread. this version has been tested on a Teensy 3.2 and a Teensy LC.
+In the Katana_USB_MIDI version, LCD and LEDs are updated from the Katana's USB MIDI messages. Meaning, they should take of themselves. Gumtown from the Vguitar forum deserves recognition for rewriting most of the code and adding a great deal of functionality. There is a forum thread reguarding updates and functions: https://www.vguitarforums.com/smf/index.php?topic=25185.0 
 
-**Consider this unsupported beta software.** If you get stuck I may not be able to help you.
+Included in the : Katana_USB_MIDI version
+
+Tap tempo: global or patch
+
+Selectable mode for footswitches along the bottom either one or both FX/MOD Delay 1/FX, and Reverb/Delay 2.
+
+Midi IN - control Katana patch and FX from an external MIDI controller.
+
+LCD displays FX status, amp name, tempo, loop status, bank/fx mode, and channel number.
+
+An expression pedal can be connected to an external MIDI controller to control 1 effect only. this is experimental and requires some coding on your part.
+
+Expression pedal jack input directly connected to controller and external MIDI clock IN is being worked on but not yet complete, no ETA.
+
+There is also a BOM (parts list) in this thread. this version has been tested on a Teensy 3.2 and a Teensy LC.
+
+**Consider this unsupported beta software. ** If you get stuck, I may not be able to help you.
 
 * Note I had to compile the sketch with the "fast + LTO" setting (debug also works), otherwise the USB mini host shield would not work. You must select the Teensy option "MIDI" when powered externally (not connected to a computer). Also, you should use the modified versions of the MS3 library included above (top of page).
 
@@ -44,4 +60,3 @@ These sketches have only been tested with a Teensy 3.2 and a Teensy LC.
 
 Inside view with messy wiring and extra holes from a previous project:
 ![alt text](https://raw.githubusercontent.com/SteveObert/KatanaUSB_Midi_controller/master/images/IMG_2526.JPG)
-
