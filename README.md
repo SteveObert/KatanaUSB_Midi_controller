@@ -8,6 +8,7 @@ This is working prototype of a MIDI foot controller for a BOSS Katana using a Te
 This controller can also listen to a 5 pin MIDI IN port and can be programed to translate MIDI messages (PC, CC, etc.) to sysex and forward those to a Katana. However, you must know the Katana sysex. Sending MIDI OUT from the footswitch is also possible.
 
 It seems satable; however, it has only been tested by two people that I am aware of.
+**Consider this unsupported beta software. ** If you get stuck, I may not be able to help you.
 
 There are two versions:
 
@@ -37,9 +38,7 @@ Included in the : Katana_USB_MIDI version
 
 
 
-**Consider this unsupported beta software. ** If you get stuck, I may not be able to help you.
-
-* Note I had to compile the sketch with the "fast + LTO" setting (debug also works), otherwise the USB mini host shield would not work. You must select the Teensy option "MIDI" when powered externally (not connected to a computer). Also, you should use the modified versions of the MS3 library included above (top of page).
+** Note I had to compile the sketch with the "fast + LTO" setting (debug also works), otherwise the USB mini host shield would not work. You must select the Teensy option "MIDI" when powered externally (not connected to a computer). Also, you should use the modified versions of the MS3 library included above (top of page).
 
 Along with the Teensy 3.2, I use a Mini USB Host shield like this one: https://www.circuitsathome.com/usb-host-shield-hardware-manual/ along with the host shield library: https://github.com/felis/USB_Host_Shield_2.0.
 
