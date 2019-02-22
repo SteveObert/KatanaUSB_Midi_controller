@@ -18,21 +18,21 @@ In the Katana_USB_MIDI version, LCD and LEDs are updated from the Katana's USB M
 Included in the : Katana_USB_MIDI version
 
 
-*Tap tempo: global or patch.
+* Tap tempo: global or patch.
 
-*Selectable mode for 3 foot switches, toggle either one or both FX/MOD, Delay 1/FX, and Reverb/Delay 2.
+* Selectable mode for 3 foot switches, toggle either one or both FX/MOD, Delay 1/FX, and Reverb/Delay 2.
 
-*Midi IN - control Katana patch and FX from an external MIDI controller.  *Some* CC and PC messages from the MIDI in port can be received and translated to sysex and forwarded to the Katana. If you’re looking for a more complete external MIDI to Katana you could buy the MIDX-20.
+* Midi IN - control Katana patch and FX from an external MIDI controller.  *Some* CC and PC messages from the MIDI in port can be received and translated to sysex and forwarded to the Katana. If you’re looking for a more complete external MIDI to Katana you could buy the MIDX-20.
 
-*LCD displays FX status, amp name, tempo, loop status, bank/fx mode, and channel number.
+* LCD displays FX status, amp name, tempo, loop status, bank/fx mode, and channel number.
 
-*Select Green, Yellow, or Red effect functions from the three lower foot switches.
+* Select Green, Yellow, or Red effect functions from the three lower foot switches.
 
-*An expression pedal can be connected to an external MIDI controller to control 1 effect only. This is experimental and requires some coding on your part.
+* An expression pedal can be connected to an external MIDI controller to control 1 effect only. This is experimental and requires some coding on your part.
 
-*Expression pedal jack input directly connected to controller and external MIDI clock IN is being worked on but not yet complete, *no ETA*.
+* Expression pedal jack input directly connected to controller and external MIDI clock IN is being worked on but not yet complete, *no ETA*.
 
-*There is also a BOM (parts list) in this thread. this version has been tested on a Teensy 3.2 and a Teensy LC.
+* There is also a BOM (parts list) in this thread. this version has been tested on a Teensy 3.2 and a Teensy LC.
 
 
 
