@@ -11,9 +11,9 @@ It seems satable; however, it had only been tested by two people that I am aware
 
 There are two versions:
 
-In the Simple sketch version, you will need to code the LCD and LEDs to work for your needs. Right now, they are setup for the way I use the Katana - when I switch amp channels I have all effects set to off. So, you'll need to change the programming if you use it differently. On this version there is no tap-tempo and no expression pedal input.
+In the Simple sketch version, you will need to code the LCD and LEDs to work for your needs. Right now, they are setup for the way I use the Katana - when I switch amp channels I have all effects set to off. So, you'll need to change the programming if you use it differently. On this version there is no tap-tempo and no expression pedal input. The simple version should run on an Ardiuno Nano or Uno, etc. because that's what I started writing the code for. However, I have not tested it recently.
 
-In the Katana_USB_MIDI version, LCD and LEDs are updated from the Katana's USB MIDI messages. Meaning, they should take of themselves. Gumtown from the Vguitar forum deserves recognition for rewriting most of the code and adding a great deal of functionality. There is a forum thread reguarding updates and functions: https://www.vguitarforums.com/smf/index.php?topic=25185.0 There is also a BOM (parts list) in this thread.
+In the Katana_USB_MIDI version, LCD and LEDs are updated from the Katana's USB MIDI messages. Meaning, they should take of themselves. Gumtown from the Vguitar forum deserves recognition for rewriting most of the code and adding a great deal of functionality. There is a forum thread reguarding updates and functions: https://www.vguitarforums.com/smf/index.php?topic=25185.0 There is also a BOM (parts list) in this thread. this version has been tested on a Teensy 3.2 and a Teensy LC.
 
 **Consider this unsupported beta software.** If you get stuck I may not be able to help you.
 
