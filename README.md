@@ -64,4 +64,5 @@ These sketches have only been tested with a Teensy 3.2 and a Teensy LC.
 
 
 Inside view with messy wiring and extra holes from a previous project:
+
 ![alt text](https://raw.githubusercontent.com/SteveObert/KatanaUSB_Midi_controller/master/images/IMG_2526.JPG)
