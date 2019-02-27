@@ -1,10 +1,3 @@
-
-/**
-   This is an example for the MS-3 library.
-
-   What have you done? Let's find out what's happening with all effect blocks.
-*/
-
 // Uncomment this to enable verbose debug messages.
 //#define MS3_DEBUG_MODE
 //uncomment below to debug withot the Katana connected.
@@ -108,7 +101,7 @@ bool changed = false;
 uint32_t timerStart = 0;
 uint32_t tapTimerStart = 0;
 uint32_t tempoMillis = 0;
-int tapTimerMode = 0;
+uint32_t tapTimerMode = 0;
 uint32_t byte_array[15]; //store parameter byte from each (13) effects when parsed.
 
 Button footSw5(2, 50);       // define the button to pin 2, 50ms debounce. Function switch
@@ -121,19 +114,19 @@ uint32_t LONG_PRESS((EEPROM.read(0) + 2) * 100); // we define a "long press" hol
 uint32_t fx1_sel = EEPROM.read(1);  // read the stored setting for FX1 whether Both, Booster only, MOD only.
 uint32_t fx2_sel = EEPROM.read(2);  // read the stored setting for FX2 whether Both, Delay1 only, FX only.
 uint32_t fx3_sel = EEPROM.read(3);  // read the stored setting for FX3 whether Both, Reverb only, Delay2 only.
-uint32_t tapT_sel = EEPROM.read(4); // read the stored setting for TAP delay whether from Patch, or Global carried to next patch.
+uint32_t tapT_sel = EEPROM.read(4); // read the stored setting for TAP delay whether from Patch, Global, or external carried to next patch.
 uint32_t tapDD2_sel = EEPROM.read(5); // read the stored setting for Delay2 TAP whether Patch (unaffected), or tempo signature of Delay1 TAP.
 
 #define TOTAL_LED 5
 
 MIDI_CREATE_INSTANCE(HardwareSerial, Serial1, MIDI);
 
-int count = 0;
-const int led1 = A0;
-const int led2 = A1;
-const int led3 = A2;
-const int led4 = A3;
-const int led5 = A6;
+uint32_t count = 0;
+const uint32_t led1 = A0;
+const uint32_t led2 = A1;
+const uint32_t led3 = A2;
+const uint32_t led4 = A3;
+const uint32_t led5 = A6;
 const uint8_t ledArray[] = {led1, led2, led3, led4, led5};
 bool fx1State = 1;
 bool fx2State = 1;
@@ -142,53 +135,55 @@ bool modState = 1;
 bool fxState = 1;
 bool dd2State = 1;
 bool loopState = 1;
-int bstr_rgy_state = 0;
-int mod_rgy_state = 0;
-int dd1_rgy_state = 1;
-int fx_rgy_state = 1;
-int revdd2_rgy_state = 2;
-/*int bstr_G_type = 1;
-  int bstr_R_type = 2;
-  int bstr_Y_type = 3;
-  int mod_G_type = 1;
-  int mod_R_type = 5;
-  int mod_Y_type = 8;
-  int fx_G_type = 2;
-  int fx_R_type = 6;
-  int fx_Y_type = 9;
-  int dd1_G_type = 1;
-  int dd1_R_type = 2;
-  int dd1_Y_type = 3;
-  int rev_G_type = 1;
-  int rev_R_type = 2;
-  int rev_Y_type = 3;*/
-int dd2_G_type = 1;
-int dd2_R_type = 2;
-int dd2_Y_type = 3;
-int currentChannel = 1;
+uint8_t bstr_rgy_state = 0;
+uint8_t mod_rgy_state = 0;
+uint8_t dd1_rgy_state = 1;
+uint8_t fx_rgy_state = 1;
+uint8_t revdd2_rgy_state = 2;
+/*uint8_t bstr_G_type = 1;
+  uint8_t bstr_R_type = 2;
+  uint8_t bstr_Y_type = 3;
+  uint8_t mod_G_type = 1;
+  uint8_t mod_R_type = 5;
+  uint8_t mod_Y_type = 8;
+  uint8_t fx_G_type = 2;
+  uint8_t fx_R_type = 6;
+  uint8_t fx_Y_type = 9;
+  uint8_t dd1_G_type = 1;
+  uint8_t dd1_R_type = 2;
+  uint8_t dd1_Y_type = 3;
+  uint8_t rev_G_type = 1;
+  uint8_t rev_R_type = 2;
+  uint8_t rev_Y_type = 3;*/
+uint8_t dd2_G_type = 1;
+uint8_t dd2_R_type = 2;
+uint8_t dd2_Y_type = 3;
+uint8_t currentChannel = 1;
 String message_1 = "FX1 on ";  // predefined lcd text for test mode, current state is read in from the Katana.
 String message_2 = "FX2 on ";
 String message_3 = "FX3 on ";
 String message_4 = "Loop on";
 String message_5 = "";
 String message_6 = "AMP Brown";
-int type, MIDIchannel, data1, data2, number, value;
-int midiByte = 0 ;
+uint32_t type, MIDIchannel, data1, data2, number, value;
+//uint8_t midiByte = 0 ;
 const uint32_t msg = 0;
-int chnMode = 0;
+uint8_t chnMode = 0;
 uint32_t previousMillis = 0;         // will store last time LED was updated - used for blinking when select bank 2 is active
 const long interval = 300;                // blink time for  select bank 2 is active
-int ledState = LOW;                       // blink time for  select bank 2 is active
-int set_rgy_select = 0;
-int rgy_num = 0;
-uint32_t tempo = 120;
-int menu = 0;
+uint8_t ledState = LOW;                       // blink time for  select bank 2 is active
+uint8_t  set_rgy_select = 0;
+uint8_t  rgy_num = 0;
+uint8_t tempo = 120;
+uint8_t menu = 0;
+
+// variables for expression pedal 1
 uint8_t pedalVal1 = 0;
 uint8_t lastPedalVal1 = 0; // used to see if there is a change in pedal position since last reading
 uint8_t pedalOn1 = 0; // was the exp pedal used?
 uint32_t pedalDelay = 1000; // If epression pedal is toe down and hasn't moved for this time switch effect off
 uint32_t lastRead1 = 0;
-boolean exp1connected = false; // Is exp . pedal 1 plugged in, if not do not execute expressin pedal 1 code
+boolean exp1connected = false; // Is exp. pedal 1 plugged in? If not do not execute expression pedal 1 code
 
 // variables for external MIDI IN clock
 uint32_t MidiClockTime = 0;
@@ -219,18 +214,18 @@ LiquidCrystal_I2C  lcd1(I2C_ADDR1, EN_PIN, RW_PIN, RS_PIN, D4_PIN, D5_PIN, D6_PI
 
 //###########################
 // Loop to turn all LEDs off
-void setAllLEDs(int state) {
-  for (int i = 0; i < TOTAL_LED; i++) {
+void setAllLEDs(uint8_t state) {
+  for (uint8_t i = 0; i < TOTAL_LED; i++) {
     digitalWrite(ledArray[i], state);
   }
 }
 
 //###########################
 // blink the leds at start up
-void blinkAllLeds(int numTimes, int inDelay) {
+void blinkAllLeds(uint8_t numTimes, uint16_t inDelay) {
   lcd1.setCursor(0, 1);
-  for (int j = 0; j < numTimes; j++) {
-    for (int i = 0; i < TOTAL_LED; i++) {
+  for (uint8_t j = 0; j < numTimes; j++) {
+    for (uint8_t i = 0; i < TOTAL_LED; i++) {
       digitalWrite(ledArray[i], HIGH);
       delay(inDelay);
       digitalWrite(ledArray[i], LOW);
@@ -307,7 +302,7 @@ void printStatus(uint32_t duration) {
   Serial.println();
 
   String txt;
-  int a;
+  uint32_t a;
   char state[8];
   for (uint8_t i = 0; i < CHECK_THIS_SIZE; i++) {
 
@@ -440,7 +435,7 @@ void printStatus(uint32_t duration) {
   updateLCD1();
   //  //Serial.println();
   //  Serial.print(F("byte_Array:"));
-  //  for (int f = 0; f < 21; f++) {
+  //  for (uint8_t f = 0; f < 21; f++) {
   //    Serial.print(String(byte_array[f]) + " ");
   //  }
   //  Serial.println();
@@ -1059,7 +1054,7 @@ void updateLCD1 (void) {
   if (message_1 == "*      KATANA      *") { // if offline message, clear display and do something different.
     lcd1.clear();
     lcd1.setCursor(0, 0);
-    for (int x = 0; x < 20; x++) {
+    for (uint8_t x = 0; x < 20; x++) {
       lcd1.print("*");
     };
     lcd1.setCursor(0, 1);
@@ -1067,7 +1062,7 @@ void updateLCD1 (void) {
     lcd1.setCursor(0, 2);
     lcd1.print("*     OFF-LINE     *");
     lcd1.setCursor(0, 3);
-    for (int x = 0; x < 20; x++) {
+    for (uint8_t x = 0; x < 20; x++) {
       lcd1.print("*");
     };
     delay(200);
@@ -1115,7 +1110,7 @@ void updateLCD1 (void) {
   }
 }
 
-void rgy_state(int a) {
+void rgy_state(uint8_t a) {
   lcd1.write(byte(a + 1));
 }
 
@@ -1379,14 +1374,12 @@ void expressionPedal1() {
 void MIDIinPC(uint8_t channel, uint8_t number) {
   if (number < 9) {
     Serial.println(String("Prog.Ch") + (" Pgrm # ") + number);
-    Serial.println(String("MIDI Chan ") + MIDIchannel + (" Value ") + MIDI.getData2());
     MS3.write(PC, number, 2);
   }
 }
 void MIDIinCC(uint8_t channel, uint8_t number, uint8_t value) {
 
   Serial.println(String("Control Ch.") + (", CC#") + number);
-  Serial.println(String("MIDI chan. ") + MIDIchannel + (",Value ") + MIDI.getData2());
   if (number == 16) {
     MS3.write(fx1_sw, value, 1);
   }
