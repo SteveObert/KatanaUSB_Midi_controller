@@ -1,3 +1,4 @@
+
 // Uncomment this to enable verbose debug messages.
 //#define MS3_DEBUG_MODE
 //uncomment below to debug withot the Katana connected.
@@ -174,7 +175,7 @@ const long interval = 300;                // blink time for  select bank 2 is ac
 uint8_t ledState = LOW;                       // blink time for  select bank 2 is active
 uint8_t  set_rgy_select = 0;
 uint8_t  rgy_num = 0;
-uint8_t tempo = 120;
+uint16_t tempo = 120;
 uint8_t menu = 0;
 
 // variables for expression pedal 1
