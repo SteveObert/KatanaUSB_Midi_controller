@@ -8,9 +8,11 @@ Gumtown from the Vguitar forum rewrote most of the code in this sketch.
 
 Included:
 
-Tap tempo: global or patch
+Tap tempo: global or patch ot (experimental MIDI Clock IN).
 
 Selectable mode for footswitches along the bottom either one or both FX/MOD Delay 1/FX, and Reverb/Delay 2.
+
+Selectable Katana color function for red ,green, or yellow for footswitches along the bottom either.
 
 Midi IN - control Katana patch and FX from an external MIDI controller.
 
