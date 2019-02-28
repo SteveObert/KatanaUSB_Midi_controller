@@ -14,6 +14,9 @@
 #include <EEPROM.h>
 #include <JC_Button.h>
 #include <MIDI.h>
+//#include <EEPROMex.h>
+
+#define TOTAL_LED 5
 
 // Initialize the MS3 class.
 MS3 MS3;
@@ -47,7 +50,8 @@ static const uint32_t fx3_sw =    0x60000610; //turn reverb on  MS3.write(fx3_sw
 static const uint32_t Loop_sw =   0x60000655;   // turn loop off on
 static const uint32_t rvbYellow = 0x60001214; // set reverb type to yellow
 static const uint32_t express =   0x6000015D; // expression pedal position ??
-static const uint32_t FV_PDL =    0x60000633; // volume pedal address
+//static const uint32_t FV_PDL =    0x60000633; // volume pedal address ??
+static const uint32_t FV_PDL =    0x00000630; // foot vol??
 static const uint32_t wah_pedal = 0x60000369; // expression pedal Wah position
 // end sysex define ##############################
 
@@ -111,17 +115,21 @@ Button footSw2(4, 50);       // define the button to pin 4, 50ms debounce. FX2 s
 Button footSw3(5, 50);       // define the button to pin 5, 50ms debounce. FX3 switch
 Button footSw4(6, 50);       // define the button to pin 6, 50ms debounce. Tap/Loop switch
 bool long_press_release = 0;  // so we know a long press occured, and mask out a switch release operation directly after.
-uint32_t LONG_PRESS((EEPROM.read(0) + 2) * 100); // we define a "long press" hold time to be stored value+2 x 100 milliseconds.
-uint32_t fx1_sel = EEPROM.read(1);  // read the stored setting for FX1 whether Both, Booster only, MOD only.
-uint32_t fx2_sel = EEPROM.read(2);  // read the stored setting for FX2 whether Both, Delay1 only, FX only.
-uint32_t fx3_sel = EEPROM.read(3);  // read the stored setting for FX3 whether Both, Reverb only, Delay2 only.
-uint32_t tapT_sel = EEPROM.read(4); // read the stored setting for TAP delay whether from Patch, Global, or external carried to next patch.
-uint32_t tapDD2_sel = EEPROM.read(5); // read the stored setting for Delay2 TAP whether Patch (unaffected), or tempo signature of Delay1 TAP.
-uint32_t exp1Connected_sel = EEPROM.read(6); // read the stored setting to see if expression pedal 1 is connected. 1 = yes, 2 = no
-
-#define TOTAL_LED 5
-
-MIDI_CREATE_INSTANCE(HardwareSerial, Serial1, MIDI);
+uint16_t LONG_PRESS((EEPROM.read(0) + 2) * 100); // we define a "long press" hold time to be stored value+2 x 100 milliseconds.
+uint8_t fx1_sel = EEPROM.read(1);  // read the stored setting for FX1 whether Both, Booster only, MOD only.
+uint8_t fx2_sel = EEPROM.read(2);  // read the stored setting for FX2 whether Both, Delay1 only, FX only.
+uint8_t fx3_sel = EEPROM.read(3);  // read the stored setting for FX3 whether Both, Reverb only, Delay2 only.
+uint8_t tapT_sel = EEPROM.read(4); // read the stored setting for TAP delay whether from Patch, Global, or external carried to next patch.
+uint8_t tapDD2_sel = EEPROM.read(5); // read the stored setting for Delay2 TAP whether Patch (unaffected), or tempo signature of Delay1 TAP.
+uint8_t exp1Connected_sel = EEPROM.read(6); // read the stored setting to see if expression pedal 1 is connected. 1 = yes, 2 = no
+uint8_t exp2Connected_sel = EEPROM.read(7); // read the stored setting to see if expression pedal 1 is connected. 1 = yes, 2 = no
+uint8_t exp1Calibrated_sel = EEPROM.read(8); // read the stored setting to see if expression pedal 1 is connected. 1 = yes, 2 = no
+//uint16_t exp1Max = EEPROM.read(9); // The maximum value read from expression pedal 1 the last time it was calibrated
+uint16_t exp1Min = EEPROM.read(10); // The minimum value read from expression pedal 1 the last time it was calibrated
+//#########
+// Pedal won't work smoothly until calibration function has been run
+uint16_t exp1Max = 1023; // The exp1Max value should be stored in EEPROM but after calibration but I ned to figure out how to get a variable > 512 to write/read
+//#########
 
 //uint32_t count = 0;
 const uint8_t led1 = A0;
@@ -185,10 +193,8 @@ uint16_t lastPedalVal1 = 0; // used to see if there is a change in pedal positio
 uint8_t pedalOn1 = 0; // was the exp pedal used?
 uint32_t pedalDelay = 1000; // If epression pedal is toe down and hasn't moved for this time switch effect off
 uint32_t lastRead1 = 0;
-uint16_t exp1Max = 0;
-uint16_t exp1Min = 1023;
 //uint8_t exp1Connected_sel = 2; // Is exp. pedal 1 plugged in?  2 = no, 1= yes
-boolean exp1Calibrated = false;
+//boolean exp1Calibrated = false;
 
 
 // variables for external MIDI IN clock
@@ -214,6 +220,8 @@ uint32_t oldTemp = 0;
 #define D5_PIN  5
 #define D6_PIN  6
 #define D7_PIN  7
+
+MIDI_CREATE_INSTANCE(HardwareSerial, Serial1, MIDI);
 
 LiquidCrystal_I2C  lcd1(I2C_ADDR1, EN_PIN, RW_PIN, RS_PIN, D4_PIN, D5_PIN, D6_PIN, D7_PIN);
 // Note: some lcd I2C chipsets with all address links open are 0x27 and some are 0x3F.
@@ -548,7 +556,6 @@ void setup() {
         break;
     }
   }
-  Serial.println(exp1Connected_sel);
 }
 // ###########################################
 // End setup
@@ -884,15 +891,17 @@ void loop() {
     //***************************************** MENU FUNCTIONS **********************************************
     if (footSw1.isPressed() && footSw5.isPressed()) {
       uint32_t page = 99;
-      uint32_t item = 1;
+      uint8_t item = 1;
       uint32_t longP_sel = (LONG_PRESS / 100) - 1;
-      uint32_t fx1_sel_b4 = 99;  // set previous values to something not current, menu updates if there is change.
-      uint32_t fx2_sel_b4 = 99;
-      uint32_t fx3_sel_b4 = 99;
+      uint8_t fx1_sel_b4 = 99;  // set previous values to something not current, menu updates if there is change.
+      uint8_t fx2_sel_b4 = 99;
+      uint8_t fx3_sel_b4 = 99;
       uint32_t tapT_sel_b4 = 99;
       uint32_t tapDD2_sel_b4 = 99;
       uint32_t longP_sel_b4 = 99;
       uint8_t exp1Connected_sel_b4 = 99;
+      uint8_t exp2Connected_sel_b4 = 99;
+      uint8_t exp1Calibrated_sel_b4 = 99;
       const String fx1_list[3] {"Both", "Booster", "MOD"};
       const String fx2_list[3] {"Both", "Delay1", "FX"};
       const String fx3_list[3] {"Both", "Reverb", "Delay2"};
@@ -900,11 +909,14 @@ void loop() {
       const String tapDD2_list[6] {"Patch", "1/16th", "1/8th", "1/4", "1/2", "Whole"};
       const String longP_list[9] {"2", "3", "4", "5", "6", "7", "8", "9", "10" }; // + "00ms"
       const String exp1_list[2] {"yes", "no"};
+      const String exp2_list[2] {"yes", "no"};
+      const String exp1Cal_list[2] {"cal now", "no"};
+
 MENU:
       if (item < 1) {
         item = 1; // set the menu scroll boundaries
-      } if (item > 7) {
-        item = 7;
+      } if (item > 9) {
+        item = 9;
       }
       if (fx1_sel > 3) {
         fx1_sel = 3;
@@ -942,10 +954,16 @@ MENU:
       } if (exp1Connected_sel < 1) {
         exp1Connected_sel = 1;
       }
-
-
-
-
+      if (exp2Connected_sel > 2) {
+        exp2Connected_sel = 2;
+      } if (exp1Connected_sel < 1) {
+        exp2Connected_sel = 1;
+      }
+      if (exp1Calibrated_sel > 2) {
+        exp1Calibrated_sel = 2;
+      } if (exp1Calibrated_sel < 1) {
+        exp1Calibrated_sel = 1;
+      }
 
       if (item < 4) {    // display the first 3 items on page 1
         if (fx1_sel != fx1_sel_b4 || fx2_sel != fx2_sel_b4 || fx3_sel != fx3_sel_b4 || page != 1) {
@@ -979,17 +997,17 @@ MENU:
 
 
       if (item > 6) { // display items 7~9 on page 3
-        if (exp1Connected_sel != exp1Connected_sel_b4 || page != 3) {
+        if (exp1Connected_sel != exp1Connected_sel_b4 || exp2Connected_sel != exp2Connected_sel_b4 || exp1Calibrated_sel != exp1Calibrated_sel_b4 || page != 3) {
           lcd1.clear();
           lcd1.setCursor(0, 0);
           lcd1.print("Settings:");
           lcd1.setCursor(0, 1);
           lcd1.print(" Exp 1: " + exp1_list[exp1Connected_sel - 1]); // expression 1 connected
           lcd1.setCursor(0, 2);
-          lcd1.print(" item 8: ");
+          lcd1.print(" Exp 2: " + exp2_list[exp2Connected_sel - 1]); // expression 1 connected
           lcd1.setCursor(0, 3);
-          lcd1.print(" item 9: ");
-          exp1Connected_sel_b4 = exp1Connected_sel; page = 3;
+          lcd1.print(" Calibrate: " + exp1Cal_list[exp1Calibrated_sel - 1]);
+          exp1Connected_sel_b4 = exp1Connected_sel; exp2Connected_sel_b4 = exp1Connected_sel; exp1Calibrated_sel_b4 = exp1Calibrated_sel; page = 3;
         }
       }
 
@@ -997,8 +1015,12 @@ MENU:
 
       if (item < 4) {
         lcd1.setCursor(0, item);
-      } else {
+      }
+      else if (item > 3 && item < 7) {
         lcd1.setCursor(0, item - 3);
+      }
+      else {
+        lcd1.setCursor(0, item - 6);
       };
       while (footSw1.isPressed() || footSw2.isPressed() || footSw3.isPressed() || footSw4.isPressed() || footSw5.isPressed()) {
         read_footSw();
@@ -1029,11 +1051,11 @@ MENU:
             longP_sel--;
           } if (item == 7) {
             exp1Connected_sel--;
+          } if (item == 8) {
+            exp2Connected_sel--;
+          } if (item == 9) {
+            exp1Calibrated_sel--;
           }
-          Serial.print("exp1Connected_sel: ");
-          Serial.println(exp1Connected_sel);
-          Serial.print("item: ");
-          Serial.println(item);
           goto MENU;
         }
         if (footSw4.isPressed()) {
@@ -1051,15 +1073,13 @@ MENU:
             longP_sel++;
           } if (item == 7) {
             exp1Connected_sel++;
+          } if (item == 8) {
+            exp2Connected_sel++;
+          } if (item == 9) {
+            exp1Calibrated_sel++;
           }
-          Serial.print("exp1Connected_sel: ");
-          Serial.println(exp1Connected_sel);
-          Serial.print("item: ");
-          Serial.println(item);
           goto MENU;
         }
-
-
       }
 
       while (footSw5.isPressed()) {
@@ -1067,7 +1087,11 @@ MENU:
       }
       if (footSw5.isReleased()) {
         footSw5.read(); lcd1.noBlink(); lcd1.clear(); updateLCD1(); LONG_PRESS = (longP_sel + 1) * 100; EEPROM.update(0, longP_sel - 1); EEPROM.update(1, fx1_sel); EEPROM.update(2, fx2_sel);
-        EEPROM.update(3, fx3_sel); EEPROM.update(4, tapT_sel); EEPROM.update(5, tapDD2_sel); EEPROM.update(6, exp1Connected_sel); goto MEXIT;
+        EEPROM.update(3, fx3_sel); EEPROM.update(4, tapT_sel); EEPROM.update(5, tapDD2_sel); EEPROM.update(6, exp1Connected_sel); EEPROM.update(7, exp2Connected_sel); EEPROM.update(8, exp1Calibrated_sel);
+        if (exp1Calibrated_sel == 1 && exp1Connected_sel == 1) {
+          exp1Calibration();
+        }
+        goto MEXIT;
       }
       goto MENU;
     }
@@ -1093,10 +1117,11 @@ MEXIT:
     pedalVal1 = constrain(pedalVal1, 0, 63);     // in case the pedal value is outside the range seen during calibration
 
     if (pedalVal1 > lastPedalVal1 + 1 || pedalVal1 < lastPedalVal1 - 1) { // If the value does not = the last value the pedal has moved.
-      if (!exp1Calibrated) {
-        exp1Calibration();
-      }
+      //      if (!exp1Calibrated) {
+      //        exp1Calibration();
+      //      }
       //expressionPedal1();
+      //MS3.write(FV_PDL, pedalVal1, 4);
       MS3.write(wah_pedal, pedalVal1, 2);
       lastRead1 = millis();
       lastPedalVal1 = pedalVal1;  // remeber the last value of the pedal position so we can see if it changed later
@@ -1402,29 +1427,31 @@ void read_footSw() {
 
 void expressionPedal1() {
   //expression pedal
-  if (millis() - lastRead1 > pedalDelay && pedalVal1 > 60 && pedalOn1 == 1) { // pedal value should be calibrated for pedals that don't read all the way to 63
-    MS3.write(fx2_sw, 0x00, 1);   // <---- Act like fx2_sw - code set with menu option later
-    lastRead1 = millis();
-    pedalOn1 = 0;
-    Serial.println("Pedal Off");
-  }
-  if (millis() - lastRead1 > 35) {   // This delay is necessary not to overwhelm the MS3 queue
-    pedalVal1 = analogRead(8) / 16;  // Divide by 16 to get range of 0-63 for midi
-    if (pedalVal1 != lastPedalVal1) { // If the value does not = the last value the pedal has moved.
-
-      if (pedalOn1 == 0) {
-        MS3.write(fx2_sw, 0x01, 1); // <---- Act like fx2_sw - code set with menu option later
-        Serial.println("Pedal on command sent!");
-        pedalOn1 = 1;
-      }
-      else {
-        MS3.write(wah_pedal, pedalVal1, 2);
-        Serial.println(pedalVal1);
-        lastRead1 = millis();
-      }
-    }
-  }
-  lastPedalVal1 = pedalVal1;  // remeber the last value of the pedal position so we can see if it changed later
+  //  if (millis() - lastRead1 > pedalDelay && pedalVal1 > 62 && pedalOn1 == 1) { // pedal value should be calibrated for pedals that don't read all the way to 63
+  //    MS3.write(fx2_sw, 0x00, 1);   // <---- Act like fx2_sw - code set with menu option later
+  //    lastRead1 = millis();
+  //    pedalOn1 = 0;
+  //    Serial.println("Pedal Off");
+  //  }
+  //  if (millis() - lastRead1 > 35) {   // This delay is necessary not to overwhelm the MS3 queue
+  //    pedalVal1 = analogRead(8);
+  //    pedalVal1 = map(pedalVal1, exp1Min, exp1Max, 0, 63);     // apply the calibration to the sensor reading
+  //    pedalVal1 = constrain(pedalVal1, 0, 63);     // in case the pedal value is outside the range seen during calibration
+  //    if (pedalVal1 != lastPedalVal1) { // If the value does not = the last value the pedal has moved.
+  //
+  //      if (pedalOn1 == 0) {
+  //        MS3.write(fx2_sw, 0x01, 1); // <---- Act like fx2_sw - code set with menu option later
+  //        Serial.println("Pedal on command sent!");
+  //        pedalOn1 = 1;
+  //      }
+  //      else {
+  //        MS3.write(wah_pedal, pedalVal1, 2);
+  //        Serial.println(pedalVal1);
+  //        lastRead1 = millis();
+  //      }
+  //    }
+  //  }
+  //  lastPedalVal1 = pedalVal1;  // remeber the last value of the pedal position so we can see if it changed later
   //end expression pedal
 }
 
@@ -1454,101 +1481,75 @@ void MIDIinCC(uint8_t channel, uint8_t number, uint8_t value) {
   if (number == 20) {
     MS3.write(rvbYellow, value, 1);
   }
-
   if (number == 21) {
     MS3.write(P_BSTR_SW, value, 1);
   }
-
   if (number == 22) {
-    MS3.write(P_MOD_SW, value, 1); // booster knob MOD
+    MS3.write(P_MOD_SW, value, 1);  // booster knob MOD
   }
-
   if (number == 23) {
-    MS3.write(P_FX_SW, value, 1); // FX/Delay knob
+    MS3.write(P_FX_SW, value, 1);  // FX/Delay knob
   }
-
   if (number == 24) {
-    MS3.write(P_SR_SW, value, 1); // Loop
+    MS3.write(P_SR_SW, value, 1);  // Loop
   }
-
   if (number == 25) {
-    MS3.write(P_DD1_SW, value, 1); // FX/Delay knob
+    MS3.write(P_DD1_SW, value, 1);  // FX/Delay knob
   }
-
   if (number == 26) {
     MS3.write(P_DD2_SW, value, 1);
   }
-
   if (number == 27) {
     MS3.write(P_REV_SW, value, 1);
   }
-
   if (number == 28) {
     MS3.write(P_AMP, value, 1);
   }
-
   if (number == 29) {
     MS3.write(P_BSTR_RGY, value, 1);
   }
-
   if (number == 30) {
     MS3.write(P_MOD_RGY, value, 1);
   }
-
   if (number == 40) {
     MS3.write(P_DD1_RGY, value, 1);
   }
-
   if (number == 41) {
     MS3.write(P_FX_RGY, value, 1);
   }
-
   if (number == 42) {
     MS3.write(P_REVDD2_RGY, value, 1);
   }
-
-  //          if (number == 119) {
-  //            MS3.write(wah_select, 02, 1);
-  //          }
-
+  //if (number == 119) { MS3.write(wah_select, 02, 1); }
   if (number == 120) {
     MS3.write(wah_pedal, value, 2);
-
   }
 }
+
 void MIDIinClock (void) {
   /*
     There is probably a beter way to do this but it's what I came up with. Taking
     the average of 24 ticks yeilds a more stable tempo that taking taking the average of a smaller
     number of clock ticks because the reading time depends on how busy the Teensy is.
-    the way this is written tempo seems accurate above ~70 BPM but off by one or two at lower
-    BPM.
+    The way this is written tempo seems accurate except at higher BPM.
 
-    1.0181818181818 is a correction factor that I determined by divided the tempo reported by the Teensy.
-    at 110 BPM on the master clock the Teensy was reading 112. 112/110 = 1.0181818181818.
+    1.01818181818 is a correction factor that I determined by divided the tempo reported by the Teensy.
+    at 110 BPM on the master clock the Teensy was reading 112. 112/110 = 1.01818181818.
   */
 
   if (tapT_sel == 3) {
     if (countClk == 23) {
-
       for (uint8_t k = 1; k < 24; k++) {
         avgTime = (deltaT[k] + deltaT[k - 1]) / 2; // find the time between 2 ticks
-        //      Serial.print("avgTime: ");
-        //      Serial.println(avgTime);
         TotalTime = TotalTime + avgTime;
-        //      Serial.print("TotalTime: ");
-        //      Serial.println(TotalTime);
       }
       AvgClkTime = TotalTime / 23;  // find the average difference in time between 24 ticks for better stability
-      //    Serial.print("AvgClkTime: ");
-      //    Serial.println(AvgClkTime);
       extTempo = (2500000 / AvgClkTime)  / 1.01818181818; // Tempo (BPM) = (60 sec * 1/24 ticks * 10^6 microseconds)/ time between ticks in micro secs
       Serial.print("extTempo: ");
       Serial.println(extTempo);
       countClk = 0;
       TotalTime = 0;
     }
-
     MidiClockTime = (micros() - LastClkRead) ;
     LastClkRead = micros();
     deltaT[countClk] = MidiClockTime;
@@ -1562,6 +1563,8 @@ void MIDIinClock (void) {
     }
   }
 }
+
+
 void setTempo(void) {
   if (tempo > 400) {
     tempo = 400;
@@ -1612,31 +1615,47 @@ void setTempo(void) {
 }
 
 void exp1Calibration(void) {
-  uint32_t timer = 0;
-  timer = millis();
-  lcd1.clear();
-  lcd1.print("Calibrating pedal");
-  lcd1.setCursor(0, 1);
-  lcd1.print("for next 5 seconds");
-  lcd1.setCursor(0, 2);
-  lcd1.print("move pedal heel to");
-  lcd1.setCursor(0, 3);
-  lcd1.print("toe several times.");
-  // calibrate for five seconds
-  while (millis() - timer < 5000) {
-    pedalVal1 = analogRead(8);
-    // record the maximum exp1 value
-    if (pedalVal1 > exp1Max) {
-      exp1Max = pedalVal1;
+//  lcd1.clear();
+//  lcd1.setCursor(0, 1);
+//  lcd1.print("Press any button to     start claibration");
+//  read_footSw();
+//  if (footSw1.isPressed() || footSw2.isPressed() || footSw3.isPressed() || footSw4.isPressed() || footSw5.isPressed() ) { // If the value does not = the last value the pedal has moved.
+    uint32_t timer = 0;
+    exp1Max = 0;    // set intital value low so it will increase
+    exp1Min = 1023; // set intital value high so it will decrease
+    timer = millis();
+    lcd1.clear();
+    lcd1.print("Calibrating pedal 1");
+    lcd1.setCursor(0, 1);
+    lcd1.print("     move pedal     ");
+    lcd1.setCursor(0, 2);
+    lcd1.print("    heel to toe     ");
+    lcd1.setCursor(0, 3);
+    lcd1.print("   several times.   ");
+    // calibrate for five seconds
+    while (millis() - timer < 5000) {
+      pedalVal1 = analogRead(8);
+      if (pedalVal1 > exp1Max) {  // record the maximum exppression pedal 1 value
+        exp1Max = pedalVal1;
+      }
+      if (pedalVal1 < exp1Min) {  // record the minimum exppression pedal 1 value
+        exp1Min = pedalVal1;
+      }
     }
-    // record the minimum exp1 value
-    if (pedalVal1 < exp1Min) {
-      exp1Min = pedalVal1;
-    }
-  }
-  exp1Calibrated = true;
-  lcd1.clear();
-  lcd1.print("Calibration complete");
-  delay(1000);
-  updateLCD1();
+    exp1Calibrated_sel = 1;
+    //EEPROM.update(9, exp1Max); // not in storing in eeprom correctly??
+    EEPROM.update(10, exp1Min);
+    Serial.print("exp1Max");
+    Serial.println(exp1Max);
+    Serial.print("exp1Min");
+    Serial.println(exp1Min);
+    lcd1.clear();
+    lcd1.print("Calibration complete");
+    delay(2000);
+    updateLCD1();
+//  }
+//  else {
+//    exp1Calibration();
+//    delay(500);
+//  }
 }
