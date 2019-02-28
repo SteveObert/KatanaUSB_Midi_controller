@@ -128,7 +128,7 @@ uint8_t exp1Calibrated_sel = EEPROM.read(8); // read the stored setting to see i
 uint16_t exp1Min = EEPROM.read(10); // The minimum value read from expression pedal 1 the last time it was calibrated
 //#########
 // Pedal won't work smoothly until calibration function has been run
-uint16_t exp1Max = 1023; // The exp1Max value should be stored in EEPROM but after calibration but I ned to figure out how to get a variable > 512 to write/read
+uint16_t exp1Max = 1023; // The exp1Max value should be stored in EEPROM after calibration but I ned to figure out how to get a variable > 512 to write/read
 //#########
 
 //uint32_t count = 0;
