@@ -124,11 +124,13 @@ uint8_t tapDD2_sel = EEPROM.read(5); // read the stored setting for Delay2 TAP w
 uint8_t exp1Connected_sel = EEPROM.read(6); // read the stored setting to see if expression pedal 1 is connected. 1 = yes, 2 = no
 uint8_t exp2Connected_sel = EEPROM.read(7); // read the stored setting to see if expression pedal 1 is connected. 1 = yes, 2 = no
 uint8_t exp1Calibrated_sel = EEPROM.read(8); // read the stored setting to see if expression pedal 1 is connected. 1 = yes, 2 = no
-//uint16_t exp1Max = EEPROM.read(9); // The maximum value read from expression pedal 1 the last time it was calibrated
-uint16_t exp1Min = EEPROM.read(10); // The minimum value read from expression pedal 1 the last time it was calibrated
+uint16_t exp1Min = EEPROM.read(9); // The minimum value read from expression pedal 1 the last time it was calibrated
+uint16_t exp1Max = 0;
+//EEPROM.get( 10, exp1Max ); // The maximum value read from expression pedal 1 the last time it was calibrated
+
 //#########
 // Pedal won't work smoothly until calibration function has been run
-uint16_t exp1Max = 1023; // The exp1Max value should be stored in EEPROM after calibration but I ned to figure out how to get a variable > 512 to write/read
+//uint16_t exp1Max = 1023; // The exp1Max value should be stored in EEPROM after calibration but I ned to figure out how to get a variable > 512 to write/read
 //#########
 
 //uint32_t count = 0;
@@ -525,7 +527,6 @@ void setup() {
     while (true);
   }
 
-  Serial.println(F("Ready!"));
   Serial.println();
 #ifdef MS3_OVERRIDE_MODE
   updateLCD1();
@@ -556,6 +557,7 @@ void setup() {
         break;
     }
   }
+  EEPROM.get( 10, exp1Max ); // The maximum value read from expression pedal 1 the last time it was calibrated
 }
 // ###########################################
 // End setup
@@ -1615,47 +1617,46 @@ void setTempo(void) {
 }
 
 void exp1Calibration(void) {
-//  lcd1.clear();
-//  lcd1.setCursor(0, 1);
-//  lcd1.print("Press any button to     start claibration");
-//  read_footSw();
-//  if (footSw1.isPressed() || footSw2.isPressed() || footSw3.isPressed() || footSw4.isPressed() || footSw5.isPressed() ) { // If the value does not = the last value the pedal has moved.
-    uint32_t timer = 0;
-    exp1Max = 0;    // set intital value low so it will increase
-    exp1Min = 1023; // set intital value high so it will decrease
-    timer = millis();
-    lcd1.clear();
-    lcd1.print("Calibrating pedal 1");
-    lcd1.setCursor(0, 1);
-    lcd1.print("     move pedal     ");
-    lcd1.setCursor(0, 2);
-    lcd1.print("    heel to toe     ");
-    lcd1.setCursor(0, 3);
-    lcd1.print("   several times.   ");
-    // calibrate for five seconds
-    while (millis() - timer < 5000) {
-      pedalVal1 = analogRead(8);
-      if (pedalVal1 > exp1Max) {  // record the maximum exppression pedal 1 value
-        exp1Max = pedalVal1;
-      }
-      if (pedalVal1 < exp1Min) {  // record the minimum exppression pedal 1 value
-        exp1Min = pedalVal1;
-      }
+  //  lcd1.clear();
+  //  lcd1.setCursor(0, 1);
+  //  lcd1.print("Press any button to     start claibration");
+  //  read_footSw();
+  //  if (footSw1.isPressed() || footSw2.isPressed() || footSw3.isPressed() || footSw4.isPressed() || footSw5.isPressed() ) { // If the value does not = the last value the pedal has moved.
+  uint32_t timer = 0;
+  exp1Max = 0;    // set intital value low so it will increase
+  exp1Min = 1023; // set intital value high so it will decrease
+  timer = millis();
+  lcd1.clear();
+  lcd1.print("Calibrating pedal 1");
+  lcd1.setCursor(0, 1);
+  lcd1.print("     move pedal     ");
+  lcd1.setCursor(0, 2);
+  lcd1.print("    heel to toe     ");
+  lcd1.setCursor(0, 3);
+  lcd1.print("   several times.   ");
+  // calibrate for five seconds
+  while (millis() - timer < 5000) {
+    pedalVal1 = analogRead(8);
+    if (pedalVal1 > exp1Max) {  // record the maximum exppression pedal 1 value
+      exp1Max = pedalVal1;
     }
-    exp1Calibrated_sel = 1;
-    //EEPROM.update(9, exp1Max); // not in storing in eeprom correctly??
-    EEPROM.update(10, exp1Min);
-    Serial.print("exp1Max");
-    Serial.println(exp1Max);
-    Serial.print("exp1Min");
-    Serial.println(exp1Min);
-    lcd1.clear();
-    lcd1.print("Calibration complete");
-    delay(2000);
-    updateLCD1();
-//  }
-//  else {
-//    exp1Calibration();
-//    delay(500);
-//  }
+    if (pedalVal1 < exp1Min) {  // record the minimum exppression pedal 1 value
+      exp1Min = pedalVal1;
+    }
+  }
+  EEPROM.update(9, exp1Min);
+  EEPROM.put(10, exp1Max); // not in storing in eeprom correctly??
+  Serial.print("exp1Max");
+  Serial.println(exp1Max);
+  Serial.print("exp1Min");
+  Serial.println(exp1Min);
+  lcd1.clear();
+  lcd1.print("Calibration complete");
+  delay(2000);
+  updateLCD1();
+  //  }
+  //  else {
+  //    exp1Calibration();
+  //    delay(500);
+  //  }
 }
