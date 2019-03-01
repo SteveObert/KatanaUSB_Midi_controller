@@ -126,12 +126,9 @@ uint8_t exp2Connected_sel = EEPROM.read(7); // read the stored setting to see if
 uint8_t exp1Calibrated_sel = EEPROM.read(8); // read the stored setting to see if expression pedal 1 is connected. 1 = yes, 2 = no
 uint16_t exp1Min = EEPROM.read(9); // The minimum value read from expression pedal 1 the last time it was calibrated
 uint16_t exp1Max = 0;
-//EEPROM.get( 10, exp1Max ); // The maximum value read from expression pedal 1 the last time it was calibrated
+// exp1Max is the maximum value read from expression pedal 1 the last time it was calibrated -- EEprom.put is run in setup funct
+//EEPROM.get( 10, exp1Max );
 
-//#########
-// Pedal won't work smoothly until calibration function has been run
-//uint16_t exp1Max = 1023; // The exp1Max value should be stored in EEPROM after calibration but I ned to figure out how to get a variable > 512 to write/read
-//#########
 
 //uint32_t count = 0;
 const uint8_t led1 = A0;
@@ -195,8 +192,6 @@ uint16_t lastPedalVal1 = 0; // used to see if there is a change in pedal positio
 uint8_t pedalOn1 = 0; // was the exp pedal used?
 uint32_t pedalDelay = 1000; // If epression pedal is toe down and hasn't moved for this time switch effect off
 uint32_t lastRead1 = 0;
-//uint8_t exp1Connected_sel = 2; // Is exp. pedal 1 plugged in?  2 = no, 1= yes
-//boolean exp1Calibrated = false;
 
 
 // variables for external MIDI IN clock
@@ -1645,7 +1640,7 @@ void exp1Calibration(void) {
     }
   }
   EEPROM.update(9, exp1Min);
-  EEPROM.put(10, exp1Max); // not in storing in eeprom correctly??
+  EEPROM.put(10, exp1Max);
   Serial.print("exp1Max");
   Serial.println(exp1Max);
   Serial.print("exp1Min");
