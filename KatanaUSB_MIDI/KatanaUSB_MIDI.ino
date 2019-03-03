@@ -1,11 +1,8 @@
-
 // Uncomment this to enable verbose debug messages.
 //#define MS3_DEBUG_MODE
 //uncomment below to debug withot the Katana connected.
 //#define MS3_OVERRIDE_MODE
 
-#include "Arduino.h"
-#include <avr/pgmspace.h>
 #include "MS3.h"
 //#include <Wire.h>       //use this for Teensy LC
 #include <i2c_t3.h>   // use this for Teensy 3.1/3.2
@@ -14,7 +11,6 @@
 #include <EEPROM.h>
 #include <JC_Button.h>
 #include <MIDI.h>
-//#include <EEPROMex.h>
 
 #define TOTAL_LED 5
 
@@ -50,8 +46,8 @@ static const uint32_t fx3_sw =    0x60000610; //turn reverb on  MS3.write(fx3_sw
 static const uint32_t Loop_sw =   0x60000655;   // turn loop off on
 static const uint32_t rvbYellow = 0x60001214; // set reverb type to yellow
 static const uint32_t express =   0x6000015D; // expression pedal position ??
-//static const uint32_t FV_PDL =    0x60000633; // volume pedal address ??
-static const uint32_t FV_PDL =    0x00000630; // foot vol??
+static const uint32_t FV_PDL =    0x60000633; // volume pedal address  MS3.write(FV_PDL, 0-63, 1)
+//static const uint32_t FV_PDL =    0x00000630; // foot vol??
 static const uint32_t wah_pedal = 0x60000369; // expression pedal Wah position
 // end sysex define ##############################
 
@@ -192,6 +188,7 @@ uint16_t lastPedalVal1 = 0; // used to see if there is a change in pedal positio
 uint8_t pedalOn1 = 0; // was the exp pedal used?
 uint32_t pedalDelay = 1000; // If epression pedal is toe down and hasn't moved for this time switch effect off
 uint32_t lastRead1 = 0;
+uint8_t expressionPedal1Pin = 8;
 
 
 // variables for external MIDI IN clock
@@ -1105,21 +1102,18 @@ MEXIT:
   MIDI.read();
 
   //handle expression pedal 1 input
-  if (millis() - lastRead1 > 40 && exp1Connected_sel == 1) {   // This delay is necessary not to overwhelm the MS3 queue
+  if (millis() - lastRead1 > 40 && exp1Connected_sel == 1) {   // This delay is necessary to prevent overwhelming the MS3 queue
 
 
     //pedalVal1 = analogRead(8) / 16;  // Divide by 16 to get range of 0-63 for midi
-    pedalVal1 = analogRead(8);
+    pedalVal1 = analogRead(expressionPedal1Pin);
     pedalVal1 = map(pedalVal1, exp1Min, exp1Max, 0, 63);     // apply the calibration to the sensor reading
     pedalVal1 = constrain(pedalVal1, 0, 63);     // in case the pedal value is outside the range seen during calibration
 
-    if (pedalVal1 > lastPedalVal1 + 1 || pedalVal1 < lastPedalVal1 - 1) { // If the value does not = the last value the pedal has moved.
-      //      if (!exp1Calibrated) {
-      //        exp1Calibration();
-      //      }
-      //expressionPedal1();
-      //MS3.write(FV_PDL, pedalVal1, 4);
-      MS3.write(wah_pedal, pedalVal1, 2);
+    if (abs(pedalVal1 - lastPedalVal1) > 1) { // If the value does not = the last value the pedal has moved.
+      //expressionPedal1(); // once expression pedal code is complete move this stuff to function
+      //MS3.write(FV_PDL, pedalVal1, 1); // volume pedal
+      MS3.write(wah_pedal, pedalVal1, 1); // pedal wah position
       lastRead1 = millis();
       lastPedalVal1 = pedalVal1;  // remeber the last value of the pedal position so we can see if it changed later
       Serial.print("expression pedal 1 position: ");
@@ -1551,8 +1545,8 @@ void MIDIinClock (void) {
     LastClkRead = micros();
     deltaT[countClk] = MidiClockTime;
     countClk = countClk + 1;
-
-    if (tempo > round(extTempo) + 1 || tempo < round(extTempo) - 1) {
+    if (abs(tempo - round(extTempo)) > 1) { // check to see if tempo has changed
+      //if (tempo > round(extTempo) + 1 || tempo < round(extTempo) - 1) {
       tempo = extTempo;
       Serial.print("Tempo: ");
       Serial.println(tempo);
