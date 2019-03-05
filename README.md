@@ -56,6 +56,8 @@ https://www.vguitarforums.com/smf/index.php?topic=21864.0
 
 
 ![alt text](https://raw.githubusercontent.com/SteveObert/KatanaUSB_Midi_controller/master/wiring_and_Fritzing/wiring.png)
+Wiring shown above does not include expressin pedals or MIDI through, see images directory for that diagram.
+
 
 * I don't know if this is necessary but, I originally tested this project with an Arduino Nano and I "cut the trace inside VBUS jumper" on the host shield as mentioned in the second paragraph under the Power Options part of this page: https://www.circuitsathome.com/usb-host-shield-hardware-manual/ shown here: https://www.pjrc.com/teensy/td_libs_USBHostShield.html. I googled these pictures that show the modification for 5v microcntrollers: https://geekhack.org/index.php?PHPSESSID=jnim6u2dcno62u8vpbm8sl9ias67hb3o&action=dlattach;topic=80421.0;attach=130856;image
 and https://geekhack.org/index.php?PHPSESSID=jnim6u2dcno62u8vpbm8sl9ias67hb3o&action=dlattach;topic=80421.0;attach=130858;image
