@@ -1,5 +1,5 @@
-# A USB MIDI foot controller/translator
-# for Boss Katana amplifiers.
+# A Teensy based USB MIDI foot controller/translator
+# for Boss Katana.
 
 ![alt text](https://raw.githubusercontent.com/SteveObert/KatanaUSB_Midi_controller/master/images/IMG_2516.JPG)
 
