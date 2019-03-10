@@ -1,4 +1,10 @@
 // Put all three files in the same directory before compiling!
+// List of To Do items
+// 1. Allow expression pedal 1 automatically change to controll assigned parameter with patch change.
+// 2. Support expression pedal 2.
+// 3. Allow expression pedal(s) to automatically switch assigned effect off/on (partialy done for pedal 1).
+// 4. Update LCD screen to show more useful information. Perhaps, show selected effect instead of FX1 on/off.
+// 5. Loop on/off LCD text could be replaced with something else as there is a status LED anyway.
 
 // Uncomment this to enable verbose debug messages.
 //#define MS3_DEBUG_MODE
@@ -108,7 +114,7 @@ uint32_t timerStart = 0;
 uint32_t tapTimerStart = 0;
 uint32_t tempoMillis = 0;
 uint32_t tapTimerMode = 0;
-uint32_t byte_array[15]; //store parameter byte from each (13) effects when parsed.
+uint32_t byte_array[15]; //store parameter byte from each (15) effects when parsed.
 
 Button footSw5(2, 50);       // define the button to pin 2, 50ms debounce. Function switch
 Button footSw1(3, 50);       // define the button to pin 3, 50ms debounce. FX1 switch
@@ -122,13 +128,6 @@ uint8_t fx2_sel = EEPROM.read(2);  // read the stored setting for FX2 whether Bo
 uint8_t fx3_sel = EEPROM.read(3);  // read the stored setting for FX3 whether Both, Reverb only, Delay2 only.
 uint8_t tapT_sel = EEPROM.read(4); // read the stored setting for TAP delay whether from Patch, Global, or external carried to next patch.
 uint8_t tapDD2_sel = EEPROM.read(5); // read the stored setting for Delay2 TAP whether Patch (unaffected), or tempo signature of Delay1 TAP.
-uint8_t exp1Connected_sel = EEPROM.read(6); // read the stored setting to see if expression pedal 1 is connected. 1 = yes, 2 = no
-uint8_t exp2Connected_sel = EEPROM.read(7); // read the stored setting to see if expression pedal 1 is connected. 1 = yes, 2 = no
-uint8_t exp1Calibrated_sel = EEPROM.read(8); // read the stored setting to see if expression pedal 1 is connected. 1 = yes, 2 = no
-uint16_t exp1Min = EEPROM.read(9); // The minimum value read from expression pedal 1 the last time it was calibrated
-uint16_t exp1Max = 0;
-// exp1Max is the maximum value read from expression pedal 1 the last time it was calibrated -- EEprom.put is run in setup funct
-//EEPROM.get( 10, exp1Max );
 
 
 //uint32_t count = 0;
@@ -187,7 +186,7 @@ uint8_t  rgy_num = 0;
 uint16_t tempo = 120;
 uint8_t menu = 0;
 
-// variables for expression pedal 1
+// variables for expression pedal(s)
 uint16_t pedalVal1 = 0;           // Expression pedal 1 reading
 uint16_t lastPedalVal1 = 0;       // used to see if there is a change in pedal position since last reading
 uint8_t pedalOn1 = 0;             // was the exp pedal used?
@@ -196,6 +195,14 @@ uint8_t pedalOnThreshold = 62;    // An expression pedal value greater than this
 uint32_t lastRead1 = 0;           // last reading of expression pedal 1
 uint8_t expressionPedal1Pin = 8;  // TRS tip for expression pedal 1
 uint8_t expressionPedal1RingPin = 7;// TRS ring for expression pedal 1
+uint8_t exp1Connected_sel = EEPROM.read(6); // read the stored setting to see if expression pedal 1 is connected. 1 = yes, 2 = no
+uint8_t exp2Connected_sel = EEPROM.read(7); // read the stored setting to see if expression pedal 1 is connected. 1 = yes, 2 = no
+uint8_t exp1Calibrated_sel = EEPROM.read(8); // read the stored setting to see if expression pedal 1 is connected. 1 = yes, 2 = no
+uint16_t exp1Min = EEPROM.read(9); // The minimum value read from expression pedal 1 the last time it was calibrated
+uint16_t exp1Max = 0;
+// exp1Max is the maximum value read from expression pedal 1 the last time it was calibrated -- EEprom.put is run in setup funct
+//EEPROM.get( 10, exp1Max );
+
 
 
 // variables for external MIDI IN clock
@@ -490,11 +497,11 @@ void setup() {
   Wire.begin();
   Serial.begin(115200);
   //Serial.begin(31250);
-  delay(1000);
-  MIDI.begin(MIDI_CHANNEL_OMNI);
-  MIDI.setHandleProgramChange(MIDIinPC);
-  MIDI.setHandleControlChange(MIDIinCC);
-  MIDI.setHandleClock(MIDIinClock);
+  // delay(1000);
+  MIDI.begin(MIDI_CHANNEL_OMNI);          // Listen on all MIDI channels
+  MIDI.setHandleProgramChange(MIDIinPC);  // Run MIDIinPC() function if Program change received.
+  MIDI.setHandleControlChange(MIDIinCC);  // Run MIDIinCC() function if Control change received.
+  MIDI.setHandleClock(MIDIinClock);       // Run MIDIinClock() function if external MIDI Clock in present and enabled
 
   footSw1.begin();
   footSw2.begin();
@@ -507,7 +514,7 @@ void setup() {
   pinMode(led3, OUTPUT);
   pinMode(led4, OUTPUT);
   pinMode(led5, OUTPUT);
-  Wire.setClock(1000000L);
+  Wire.setClock(1000000L);  // May not be necessary
   // set LEDS and initial display text
   lcd1.begin (20, 4); //  LCD1 is 20x4
 
@@ -518,7 +525,7 @@ void setup() {
   lcd1.createChar(2, custom_Y);
   lcd1.createChar(3, custom_R);
   lcd1.setCursor(0, 0);
-  lcd1.print("Initializing...");
+  lcd1.print("Initializing...");  // Not required
   blinkAllLeds(1, 200);
   setAllLEDs(LOW);
   lcd1.clear();
@@ -612,7 +619,6 @@ void loop() {
       break;
   }
 
-
   // Blink LED1 if chnMode == 2)
   uint32_t currentMillis = millis();
   if (chnMode == 2 ) {
@@ -631,8 +637,7 @@ void loop() {
   }
   // End blink LED1 if chnMode == 2)
 
-
-  // Blink LED1,2,3 if in rgy select mode)
+  // Blink LEDs 1,2,3 if in rgy select mode)
   if (set_rgy_select > 0) {
     if (currentMillis - previousMillis >= interval) {
       // save the last time you blinked the LED
@@ -649,14 +654,12 @@ void loop() {
       digitalWrite(led4, ledState);
     }
   }
-  // End blink LED1,2,3 if in rgy select mode)
+  // End blink LEDs 1,2,3 if in rgy select mode)
 
 
   //************************************************** FOOT SWITCH ROUTINES *********************
   read_footSw();
   if (set_rgy_select == 0) {
-
-
 
     //****************************** FX1 FOOTSWITCH ********************************
 
@@ -750,7 +753,6 @@ void loop() {
     } else {
       long_press_release = 0;
     }
-
 
     //****************************************FX3 FOOTSWITCH *********************************
     if (footSw3.pressedFor(LONG_PRESS) && long_press_release < 1) {
