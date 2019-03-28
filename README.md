@@ -69,6 +69,7 @@ Inside view with messy wiring and extra holes from a previous project:
 
 ![alt text](https://raw.githubusercontent.com/SteveObert/KatanaUSB_Midi_controller/master/images/IMG_2526.JPG)
 
-Another inside view but with a Teensy 3.6.
+
+Another inside view but with a Teensy 3.6, MIDI through (untested), an extra power jack for daisy chaining, and two TRS jacks (only one is connected in the picture). A Teensy 3.2 would work just as well with ths options.
 
 ![alt text](https://github.com/SteveObert/KatanaUSB_Midi_controller/blob/master/images/IMG_2590.JPG)
